@@ -339,14 +339,6 @@ module.exports = function (webpackEnv) {
     module: {
       strictExportPresence: true,
       rules: [
-        {
-          test: /\.less$/,
-          use: [
-            'style-loader',
-            'css-loader',
-            'less-loader', // compiles Less to CSS
-          ],
-        },
         // Handle node_modules packages that contain sourcemaps
         shouldUseSourceMap && {
           enforce: 'pre',

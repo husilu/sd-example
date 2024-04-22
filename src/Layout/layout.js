@@ -1,11 +1,12 @@
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import Router from '../router'
 import { routerList } from '../router/routes'
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme } from 'antd';
 import CustomHeader from '../Header/header';
 import React from 'react';
-// import history from "../utils/history";
-import { useNavigate, useInRouterContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import styles from './styles.module.scss';
+
 const { Header, Content, Sider } = Layout;
 
 const menu = routerList.filter(route => route.isMenu).map((route, index) => {
@@ -32,9 +33,13 @@ const LayoutPage = () => {
     function clickMenu({keyPath, key}) {
         navigate({pathname: key})
     }
+    const [collapsed, setCollapsed] = useState(false);
+    const toggleCollapsed = () => {
+        setCollapsed(!collapsed);
+    };
     return (
         <Layout>
-            <Header className="header">
+            <Header className={styles.header}>
                 <CustomHeader />
             </Header>
             <Layout>
@@ -61,15 +66,6 @@ const LayoutPage = () => {
                         padding: '0 24px 24px',
                     }}
                 >
-                    <Breadcrumb
-                        style={{
-                            margin: '16px 0',
-                        }}
-                    >
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>
-                    </Breadcrumb>
                     <Content
                         style={{
                             padding: 24,
@@ -77,6 +73,7 @@ const LayoutPage = () => {
                             minHeight: 280,
                             background: colorBgContainer,
                         }}
+                        className={styles.content} // Add the CSS class from the styles module
                     >
                         <Router></Router>
                     </Content>

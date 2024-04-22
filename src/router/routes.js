@@ -1,13 +1,10 @@
 // 导入所需组件
-import Demo from '../Views/Demo/index'
 import Home from '../Views/Home/index'
 import NotFound from "../Views/404"
-import UserManagement from "../Views/userManagement"
-import {UserOutlined, LaptopOutlined} from "@ant-design/icons";
-import Sonohara from "../Views/userManagement/sonohara";
-import OceanEyes from "../Views/userManagement/oceanEyes";
-import CloudS from "../Views/userManagement/clouds";
+import ImgManagement from "../Views/imgManagement"
+import { UserOutlined, LaptopOutlined } from "@ant-design/icons";
 import Login from "../Views/Login";
+import UserEdit from '../Views/User/index';
 export const routerList = [
     {
         path: '/',
@@ -17,8 +14,15 @@ export const routerList = [
         element: <Home></Home>
     },
     {
-        path: '/userLogin',
+        path: '/login',
         title: '登录',
+        isMenu: false,
+        icon: UserOutlined,
+        element: <Login></Login>
+    },
+    {
+        path: '/register',
+        title: '注册',
         isMenu: false,
         icon: UserOutlined,
         element: <Login></Login>
@@ -30,30 +34,23 @@ export const routerList = [
         element: <NotFound></NotFound>
     },
     {
-        path: '/userManagement',
-        title: '成员中心',
+        path: '/imgsManagement',
+        title: '图库',
         isMenu: true,
         icon: UserOutlined,
-        element: <UserManagement />,
-        children: [
-            {
-                path: '/oceanEyes',
-                title: 'OceanEyes',
-                isMenu: true,
-                element: <OceanEyes />,
-            },
-            {
-                path: '/sonohara',
-                title: 'sonohara',
-                isMenu: true,
-                element: <Sonohara />,
-            },
-            {
-                path: '/clouds',
-                title: 'clouds',
-                isMenu: true,
-                element: <CloudS />,
-            }
-        ]
+        element: <ImgManagement />,
+    },
+    {
+        path: '/useredit',
+        title: '用户编辑',
+        icon: UserOutlined,
+        element: <UserEdit />,
     }
+    // {
+    //     path: "/AiDrawer",
+    //     title: 'Ai画图',
+    //     icon: FormatPainterOutlined,
+    //     isMenu: true,
+    //     element: <AiDrawer></AiDrawer>
+    // }
 ]

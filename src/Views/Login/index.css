@@ -2,7 +2,8 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    background: linear-gradient(dodgerblue, deepskyblue, dodgerblue);
+    background: url('https://pic.616pic.com/bg_w1180/00/03/49/415hBNYae5.jpg');
+    background-size: cover;
 }
 
 .login-form {
@@ -13,4 +14,5 @@
     background: #fff;
     border-radius: 4px;
     padding: 24px;
+    width: 400px;
 }

@@ -1,0 +1,11 @@
+.header-title {
+    width: 100%;
+    color: #fff;
+}
+
+.pop {
+    cursor: pointer;
+    &:hover {
+        color: #007BFF;
+    }
+}

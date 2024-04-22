@@ -1,88 +1,39 @@
-import { Button, Checkbox, Form, Input } from 'antd';
-import React from "react";
+import React, { useRef } from "react";
 import {useNavigate} from 'react-router-dom'
+import { Tabs } from "antd";
 import './index.css'
+import Login from './loginForm'
+import Register from './registerForm'
 
-const onFinish = (values) => {
-  console.log('Success:', values);
-    window.location.href = window.location.origin + '/'
-};
-const onFinishFailed = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
-export default function Login() {
+export default function LoginOrRegister() {
     const navigate = useNavigate()
+    const loginRef = useRef()
+    const registerRef = useRef()
+    const items = [
+        {
+            key: 'login',
+            label: '登录',
+            children: <Login childRef={loginRef} ></Login>,
+          },
+          {
+            key: 'register',
+            label: '注册',
+            children: <Register childRef={registerRef}></Register>,
+        },
+    ]
+    const onChange = (activeKey) => {
+        // Execute methods in Login and Register components based on the activeKey
+        if (activeKey === 'login') {
+            loginRef.current?.resetForm()
+        } else if (activeKey === 'register') {
+            registerRef.current?.resetForm()
+        }
+    }
   return (
       <div className="login-page">
-          <Form
-              name="basic"
-              className="login-form"
-              labelCol={{
-                  span: 8,
-              }}
-              wrapperCol={{
-                  span: 16,
-              }}
-              style={{
-                  maxWidth: 600,
-              }}
-              initialValues={{
-                  remember: true,
-              }}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-          >
-              <h3>请登录</h3>
-              <Form.Item
-                  label="Username"
-                  name="username"
-                  rules={[
-                      {
-                          required: true,
-                          message: 'Please input your username!',
-                      },
-                  ]}
-              >
-                  <Input />
-              </Form.Item>
-
-              <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[
-                      {
-                          required: true,
-                          message: 'Please input your password!',
-                      },
-                  ]}
-              >
-                  <Input.Password />
-              </Form.Item>
-
-              <Form.Item
-                  name="remember"
-                  valuePropName="checked"
-                  wrapperCol={{
-                      offset: 8,
-                      span: 16,
-                  }}
-              >
-                  <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-
-              <Form.Item
-                  wrapperCol={{
-                      offset: 8,
-                      span: 16,
-                  }}
-              >
-                  <Button type="primary" htmlType="submit">
-                      Submit
-                  </Button>
-              </Form.Item>
-          </Form>
+           <div className="login-form">
+                <Tabs defaultActiveKey="1" items={items} onChange={onChange} type="card"/>
+           </div>
       </div>
-
   )
 };
