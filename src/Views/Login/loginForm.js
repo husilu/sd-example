@@ -1,18 +1,19 @@
 import { Button, Form, Input } from 'antd';
 import Api from '../../api/user';
-import { useImperativeHandle } from 'react'
+import { useImperativeHandle, useState } from 'react'
 import { useDispatch } from 'react-redux'; // 导入useDispatch hook
 import { loginSuccess } from '../../store/reducers/authReducer'; // 导入loginSuccess action
 
 const App = (props) => {
     const dispatch = useDispatch(); // 获取dispatch函数
     const { childRef } = props;
+    const [loading, setloading] = useState(false);
     const onFinish = (values) => {
+        setloading(true)
     Api.loginApi(values).then((res)=> {
         if (res.responseDesc === 'SUCCESS') {
-            // localStorage.setItem('token', '1')
-            // navigate({pathname: '/'})
             dispatch(loginSuccess({ token: res.data }));
+            setloading(false)
         }
     })
 }
@@ -81,7 +82,7 @@ return <>
                 span: 16,
             }}
         >
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
                 登录
             </Button>
         </Form.Item>

@@ -11,3 +11,18 @@
     font-weight: 500;
     margin-bottom: 20px;
 }
+
+.imgbox {
+    height: 200px;
+    width: 100%;
+    border: 1px solid rgb(217, 217, 217);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > svg {
+        width: 20px;
+        height: 20px;
+        color: rgb(217, 217, 217);
+    }
+}

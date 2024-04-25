@@ -1,18 +1,36 @@
-import { Button, Form, Input, Select } from 'antd';
-import { useImperativeHandle } from 'react';
+import { Button, Form, Input, Select, message } from 'antd';
+import { useImperativeHandle, useState} from 'react';
 import Api from '../../api/user';
 const { Option } = Select;
 
 const App = (props) => {
-    const { childRef } = props;
+    const { childRef, toLogin } = props;
+    const [loading, setloading] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
 
     useImperativeHandle(childRef, () => ({
         resetForm
     }))
 
     const onFinish = (values) => {
-        Api.loginApi(values).then((res)=>{
-            localStorage.setItem('token', '1')
+        console.log(values)
+        setloading(true)
+        let obj = {
+            name: values.name,
+            password: values.password,
+            email: values.email,
+            phone: values.phone
+        }
+        Api.registerApi(obj).then((res)=>{
+            // localStorage.setItem('token', '1')
+            console.log('res', res)
+            messageApi.open({
+                type: 'success',
+                content: '注册成功！',
+            });
+            toLogin();
+            // setloading(false)
+            
         })
     };
 
@@ -38,6 +56,7 @@ const App = (props) => {
         </Form.Item>
     );
     return <>
+     {contextHolder}
         <Form
             name="basic"
             labelCol={{
@@ -87,8 +106,8 @@ const App = (props) => {
                 label="手机号"
                 rules={[
                     {
-                        type: 'number'
-                    },
+                        type: 'string'
+                    }
                 ]}
             >
                 <Input
@@ -116,7 +135,7 @@ const App = (props) => {
                     span: 16,
                 }}
             >
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" disabled={loading} loading={loading}>
                     注册
                 </Button>
             </Form.Item>

@@ -1,25 +1,50 @@
-import { Col, Row, Slider, Card, Select } from 'antd';
+import { Col, Row, Slider, Card, Select, message, Spin } from 'antd';
 import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import Api from '../../api/img.js';
+import { useEffect, useState } from 'react';
+
 
 const { Meta } = Card;
-export default function index() {
-    const downLoadHandler = () => {
-        console.log('下载')
-    }
-    const deleteHandler = () => {
-        console.log('删除')
-    }
-    const handleChange = (val) => {
-        const obj = {
-            type: val,
-            account: 'admin'
-        }
-        Api.imglist({ obj }).then(res => {
+export default function App() {
+    const [value, setvalue] = useState("txt2img");
+    const [list, setlist] = useState([]);
+    const [loading, setloading] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+
+    useEffect(() => {
+        setloading(true)
+        Api.imglist(value).then(res => {
             if (res.responseDesc === 'SUCCESS') {
-                // console.log('res', res)
+                setlist(res.data.list)
+                setloading(false)
             }
         })
+    }, [value]);
+    const downLoadHandler = (fileName) => {
+        Api.download(value, fileName).then(res => {
+            console.log("res", res)
+        })
+    }
+
+    const onChange = (val) => {
+        setvalue(val)
+    }
+    const deleteHandler = (fileName) => {
+        setloading(true)
+       Api.delImg(value, fileName).then(res => {
+            if (res.data) {
+                messageApi.open({
+                    type: 'success',
+                    content: '删除成功！',
+                });
+                Api.imglist(value).then(res => {
+                    if (res.responseDesc === 'SUCCESS') {
+                        setlist(res.data.list)
+                        setloading(false)
+                    }
+                })
+            }
+       })
     }
 
     const options = [
@@ -30,51 +55,54 @@ export default function index() {
         {
             value: 'img2img',
             label: '图生图',
-        },
-        {
-            value: 'booth',
-            label: 'Dreambooth',
         }
+        // {
+        //     value: 'booth',
+        //     label: 'Dreambooth',
+        // }
     ]
     return (
         <div>
+            {contextHolder}
             <Row>
                 <Col>
                     <Select
-                        defaultValue="txt2img"
+                        onChange={onChange}
+                        value={value}
                         style={{
                             width: 120,
                             marginBottom: 20
                         }}
-                        onChange={handleChange}
+
                         options={options}
                     />
                 </Col>
             </Row>
-            <Row
-                gutter={{
-                    xs: 8,
-                    sm: 16,
-                    md: 24,
-                    lg: 32,
-                }}
-            >
-                <Col className="gutter-row" span={6}>
-                    <Card
-                        bordered={false}
-                        hoverable
-                        style={{
-                            width: '100%',
-                        }}
-                        actions={[
-                            <CloudDownloadOutlined key="CloudDownloadOutlined" onClick={downLoadHandler} />,
-                            <DeleteOutlined key="DeleteOutlined" onClick={deleteHandler} />
-                        ]}
-                        cover={<img alt="example" style={{ 'objectFit': 'cover' }} src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                    >
-                    </Card>
-                </Col>
+            <Spin spinning={loading}>
+            <Row gutter={16}>
+                
+                    {list.map(item => {
+                        return <Col span={6}><Card
+                            key={item.fileName}
+                            bordered={false}
+                            hoverable
+                            style={{
+                                width: '100%',
+                                marginBottom: '15px'
+                            }}
+                            actions={[
+                                <CloudDownloadOutlined key="CloudDownloadOutlined" onClick={() => downLoadHandler(item.fileName)} title="下载"/>,
+                                <DeleteOutlined key="DeleteOutlined" onClick={() => deleteHandler(item.fileName)} title="删除"/>
+                            ]}
+                            cover={<img alt="example" style={{ 'objectFit': 'cover' }} src={item.imgUrl} />}
+                        >
+                            <Meta title={item.fileName}/>
+                        </Card>
+                        </Col>
+                    })}
+                
             </Row>
+            </Spin>
         </div>
     )
 }

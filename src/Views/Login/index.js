@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef, useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import { Tabs } from "antd";
 import './index.css'
@@ -9,6 +9,7 @@ export default function LoginOrRegister() {
     const navigate = useNavigate()
     const loginRef = useRef()
     const registerRef = useRef()
+    const [tabValue, settabValue] = useState("login");
     const items = [
         {
             key: 'login',
@@ -18,7 +19,7 @@ export default function LoginOrRegister() {
           {
             key: 'register',
             label: '注册',
-            children: <Register childRef={registerRef}></Register>,
+            children: <Register childRef={registerRef} toLogin={useState("login")}></Register>,
         },
     ]
     const onChange = (activeKey) => {
@@ -32,7 +33,7 @@ export default function LoginOrRegister() {
   return (
       <div className="login-page">
            <div className="login-form">
-                <Tabs defaultActiveKey="1" items={items} onChange={onChange} type="card"/>
+                <Tabs value={tabValue} items={items} onChange={onChange} type="card"/>
            </div>
       </div>
   )

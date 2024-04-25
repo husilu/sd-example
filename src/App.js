@@ -6,8 +6,17 @@ import { ConfigProvider } from 'antd';
 // 导入路由依赖
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import Api from './api/user'
+import { useDispatch } from 'react-redux'; // 导入useDispatch hook
+import { getUser } from './store/reducers/authReducer'; // 导入loginSuccess action
 function App() {
     const isLoggedIn = useSelector(state => state.auth.token);
+    const dispatch = useDispatch(); // 获取dispatch函数
+    if (isLoggedIn) {
+        Api.userDetail().then(res => {
+            dispatch(getUser({ user: res.data }));
+        })
+    }
     // const isLoggedIn = false;
     return (
         <ConfigProvider

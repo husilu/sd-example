@@ -1,11 +1,19 @@
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select, message } from 'antd';
 import Api from '../../api/user';
+import { useSelector } from 'react-redux';
 const { Option } = Select;
 
 const App = () => {
+    const user = useSelector(state => state.auth.user);
+    const [messageApi, contextHolder] = message.useMessage();
     const onFinish = (values) => {
         Api.EditApi(values).then((res)=>{
-            console.log('res', res)
+            if (res.data) {
+                messageApi.open({
+                    type: 'success',
+                    content: '修改成功！',
+                });
+            }
         })
     };
     const onFinishFailed = (errorInfo) => {
@@ -26,6 +34,7 @@ const App = () => {
         </Form.Item>
     );
     return <>
+        {contextHolder}
         <Form
             name="basic"
             labelCol={{
@@ -38,7 +47,8 @@ const App = () => {
                 maxWidth: 600,
             }}
             initialValues={{
-                remember: true,
+                username: user.name,
+                email: user.email
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -107,9 +117,6 @@ const App = () => {
               >
                   <Button type="primary" htmlType="submit">
                       确认
-                  </Button>
-                  <Button>
-                      取消
                   </Button>
               </Form.Item>
         </Form>

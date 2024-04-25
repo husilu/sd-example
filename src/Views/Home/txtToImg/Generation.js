@@ -1,30 +1,40 @@
 import { Form } from "antd";
 
 
-import { InputNumber, Slider, Col, Row, Input, Image } from 'antd';
+import { InputNumber, Slider, Col, Row, Image, Spin } from 'antd';
 
 import React, { useState } from 'react';
 
 import styles from './style.module.scss';
 
-import { Button, Flex } from 'antd';
+import { Button } from 'antd';
 
-const downLoadHandler = () => {
-    console.log('下载')
-}
+import Api from '../../../api/img'
 
-const App = () => {
+const App = (props) => {
 
-    const [inputWidth, setInputWidth] = useState(512)
+    const { imgSrc, valueLoading, inputWidth, inputHeight, setInputWidthHandler, setInputHeightHandler, type } = props;
 
-    const [inputHeight, setInputHeight] = useState(512)
+    const [donwLoading, setdonwLoading] = useState(false);
+
+    const imgDownloadHrefStr = imgSrc.split('/')
+    const imgDownloadHref = imgDownloadHrefStr[imgDownloadHrefStr.length - 1]
+
+    const downLoadHandler = () => {
+        // console.log('下载')
+        setdonwLoading(true)
+        Api.download(type, '1714032806933.png').then(res => {
+            console.log("res", res)
+            setdonwLoading(false)
+        })
+    }
 
     const onChange = (newValue) => {
-        setInputWidth(newValue);
+        setInputWidthHandler(newValue);
     }
 
     const onChange2 = (newValue) => {
-        setInputHeight(newValue);
+        setInputHeightHandler(newValue);
     }
 
     const onFinish = () => {
@@ -116,19 +126,15 @@ const App = () => {
                 </Form>
             </Col>
             <Col span={9}>
-            <Image.PreviewGroup
-                items={[
-                'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp',
-                'https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp',
-                'https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp',
-                ]}
-            >
-                <Button type="primary" onClick={() => downLoadHandler(2)} style={{ marginBottom: "10px"}}>下载</Button>
-                <Image
-                    width={'100%'}
-                    src="https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
-                />
-            </Image.PreviewGroup>               
+                <Button type="primary" onClick={() => downLoadHandler(imgDownloadHref)} style={{ marginBottom: "10px"}} loading={donwLoading} disabled={donwLoading}>下载</Button>
+                <Spin tip="Loading" spinning={valueLoading}>
+                    {imgSrc ? <Image
+                        width={'100%'}
+                        src={imgSrc}
+                    /> : <div className={styles.imgbox}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </div>}
+                </Spin>
             </Col>
         </Row>
 

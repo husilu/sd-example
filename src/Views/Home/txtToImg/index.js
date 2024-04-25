@@ -1,4 +1,4 @@
-import { Col, Row } from 'antd';
+import { Col, Row, Button } from 'antd';
 
 import { Input } from 'antd';
 
@@ -15,25 +15,44 @@ import Api from '../../../api/img'
 const { TextArea } = Input;
 
 
-const App = () => {
+const App = (props) => {
     const [value1, setValue1] = useState('');
     const [value2, setValue2] = useState('');
+    const [valueLoading, setvalueLoading] = useState(false);
+    const [imgSrc, setimgSrc] = useState('')
+    const [inputWidth, setInputWidth] = useState(512)
+    const [inputHeight, setInputHeight] = useState(512)
+    const {type} = props
+
+    function setInputWidthHandler(val) {
+        setInputWidth(val)
+    }
+
+    function setInputHeightHandler(val) {
+        setInputHeight(val)
+    }
+
     const actionBts = [
         { name: "", icon: "" }, { name: "", icon: "" }, { name: "", icon: "" }
     ]
+
     const items = [{
         key: 'Generation',
         label: 'Generation',
-        children: <Generation></Generation>,
+        children: <Generation type={type} imgSrc={imgSrc} valueLoading={valueLoading} inputWidth={inputWidth} inputHeight={inputHeight} setInputWidthHandler={setInputWidthHandler} setInputHeightHandler={setInputHeightHandler}></Generation>,
     }]
 
     const createPicHandler = () => {
         const param = {
             prompt: value1,
-            negativePrompt: value2
+            negativePrompt: value2,
+            width: inputWidth,
+            height: inputHeight
         }
+        setvalueLoading(true)
         Api.txtToimg(param).then(res => {
-            console.log('res', res)
+            setimgSrc(res.data)
+            setvalueLoading(false)
         })
     }
 
@@ -55,10 +74,10 @@ const App = () => {
                 />
             </Col>
             <Col flex="auto" className={styles.generate} onClick={createPicHandler}>
-                <div>Generate</div>
+                <Button loading={valueLoading} className={styles.generatebtn} disabled={valueLoading}>Generate</Button>
             </Col>
         </Row>
-        <Tabs defaultActiveKey="1" items={items} type="card" />
+        <Tabs defaultActiveKey="1" items={items} type="card"/>
     </div>
 }
 
