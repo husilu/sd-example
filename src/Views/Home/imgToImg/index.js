@@ -1,6 +1,6 @@
 import { Tabs } from "antd";
 
-import { InputNumber, Slider, Col, Row, Input, Image, Spin, Button } from 'antd';
+import { Col, Row, Image, Spin, Button, message } from 'antd';
 
 import Generation from './Generation';
 
@@ -8,27 +8,58 @@ import styles from './style.module.scss';
 
 import { useState } from 'react';
 
+import Api from '../../../api/img';
+
 const App = () => {
     const [imgSrc, setimgSrc] = useState('')
     const [valueLoading, setvalueLoading] = useState(false)
     const [donwLoading, setdonwLoading] = useState(false);
-    const items = [{
-        key: 'Generation',
-        label: 'Generation',
-        children: <Generation></Generation>,
-    }]
+    const [originImg, setoriginImg] = useState("");
+    const setoriginImgHandler = (val) => {
+        setoriginImg(val)
+    }
+
     const onChange = () => {
         
     }
 
     const downLoadHandler = () => {
-
+        if(!imgSrc) {
+            return message.error('请先生成图片！')
+        }
+        setdonwLoading(true)
+        const imgDownloadHrefStr = imgSrc.split('/')
+        const imgDownloadHref = imgDownloadHrefStr[imgDownloadHrefStr.length - 1]
+        Api.download('img2img', imgDownloadHref).then(res => {
+            console.log('res', res)
+        })
     }
 
+    const getImgHandler = () => {
+        if (!originImg) {
+            return message.error(`请上传图片!`);
+        }
+        setvalueLoading(true)
+        Api.imgToimg({
+            imgUrl: originImg
+        }).then(res => {
+            setimgSrc(res.data)
+            setvalueLoading(false)
+        })
+    }
+
+    const items = [{
+        key: 'Generation',
+        label: 'Generation',
+        children: <Generation setoriginImgHandler={setoriginImgHandler} getImgHandler={getImgHandler}></Generation>,
+    }]
+
     return <>
-        <div className={styles.generate}>
-            Gengerate
-        </div>
+        <Spin spinning={valueLoading} onClick={getImgHandler}>
+            <div className={styles.generate}>
+                Gengerate
+            </div>
+        </Spin>
         <Row gutter={10}>
             <Col span={12}>
                 <Tabs defaultActiveKey="1" items={items} onChange={onChange} type="card"/>

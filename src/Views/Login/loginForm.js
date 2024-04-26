@@ -2,7 +2,7 @@ import { Button, Form, Input } from 'antd';
 import Api from '../../api/user';
 import { useImperativeHandle, useState } from 'react'
 import { useDispatch } from 'react-redux'; // 导入useDispatch hook
-import { loginSuccess } from '../../store/reducers/authReducer'; // 导入loginSuccess action
+import { loginSuccess, getUser } from '../../store/reducers/authReducer'; // 导入loginSuccess action
 
 const App = (props) => {
     const dispatch = useDispatch(); // 获取dispatch函数
@@ -12,7 +12,8 @@ const App = (props) => {
         setloading(true)
     Api.loginApi(values).then((res)=> {
         if (res.responseDesc === 'SUCCESS') {
-            dispatch(loginSuccess({ token: res.data }));
+            dispatch(loginSuccess({ token: res.data.token }));
+            dispatch(getUser({user: res.data }))
             setloading(false)
         }
     })

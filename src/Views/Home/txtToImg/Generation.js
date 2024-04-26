@@ -1,7 +1,6 @@
 import { Form } from "antd";
 
-
-import { InputNumber, Slider, Col, Row, Image, Spin } from 'antd';
+import { InputNumber, Slider, Col, Row, Image, Spin, message } from 'antd';
 
 import React, { useState } from 'react';
 
@@ -21,10 +20,12 @@ const App = (props) => {
     const imgDownloadHref = imgDownloadHrefStr[imgDownloadHrefStr.length - 1]
 
     const downLoadHandler = () => {
+        if(!imgSrc) {
+            return message.error('请先生成图片！')
+        }
         // console.log('下载')
         setdonwLoading(true)
-        Api.download(type, '1714032806933.png').then(res => {
-            console.log("res", res)
+        Api.download(type, imgDownloadHref).then(res => {
             setdonwLoading(false)
         })
     }
