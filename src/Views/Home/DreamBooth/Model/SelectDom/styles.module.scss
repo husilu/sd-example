@@ -1,0 +1,18 @@
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.r-btn {
+    border: 1px solid rgb(217, 217, 217);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 5px;
+    padding: 3px 4px;
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}

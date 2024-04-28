@@ -1,0 +1,21 @@
+.createBtn {
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #BFDBFE;
+    color: rgb(37, 99, 235);
+    font-weight: 600;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    .r-btn {
+        border: 1px solid rgb(217, 217, 217);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-left: 5px;
+        padding: 3px 4px;
+    }
+}

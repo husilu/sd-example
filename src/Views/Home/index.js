@@ -42,6 +42,11 @@ const Home = () => {
       key: 'img2img',
       label: 'img2img',
       children: <ImgToImg type={'img2img'}></ImgToImg>,
+    },
+    {
+      key: 'dreamBooth',
+      label: 'DreamBooth',
+      children: <DreamBooth type={'dreamBooth'}></DreamBooth>,
     }
   ];
 
