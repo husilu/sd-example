@@ -1,11 +1,11 @@
 import Router from '../router'
 import { routerList } from '../router/routes'
 import { Layout, Menu, theme } from 'antd';
-import CustomHeader from '../Header/header';
+import CustomHeader from './Header/header';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import styles from './styles.module.scss';
+import { useSelector } from 'react-redux';
 
 const { Header, Content, Sider } = Layout;
 
@@ -24,19 +24,18 @@ const menu = routerList.filter(route => route.isMenu).map((route, index) => {
         }) : null
     };
 });
+
 const LayoutPage = () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
 
+    const menuVal = useSelector(state => state.home.menu);
     const navigate = useNavigate()
     function clickMenu({keyPath, key}) {
         navigate({pathname: key})
     }
-    const [collapsed, setCollapsed] = useState(false);
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed);
-    };
+
     return (
         <Layout>
             <Header className={styles.header}>
@@ -44,15 +43,13 @@ const LayoutPage = () => {
             </Header>
             <Layout>
                 <Sider
-                    width={200}
                     style={{
                         background: colorBgContainer,
                     }}
+                    collapsed={menuVal}
                 >
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
                         style={{
                             height: 'calc(100vh - 64px)',
                             borderRight: 0,

@@ -1,7 +1,9 @@
-import { Form, Select, Checkbox, Row, Col, Slider, InputNumber, Collapse } from "antd";
+import { Form, Select, Checkbox, Row, Col, Slider, InputNumber, Collapse, Input } from "antd";
 import { useState } from 'react';
+import styles from './styles.module.scss'
 const { Option } = Select;
 const { Panel}  = Collapse;
+
 const App = () => {
     const [trainingVal, settrainingVal] = useState(0);
     const [skipVal, setskipVal] = useState(0);
@@ -9,6 +11,9 @@ const App = () => {
     const [ModelVal, setModelVal] = useState(0);
     const [FrequencyVal, setFrequencyVal] = useState(0);
     const [rankVal, setrankVal] = useState(0);
+    const [seedVal, setseedVal] = useState(420420);
+    const [maxResVal, setmaxResVal] = useState(512);
+    const [bucketStepsVal, setbucketStepsVal] = useState(8);
     return <div>
         <Collapse defaultActiveKey={['2']}>
             <Panel header="Performance" key="1">
@@ -278,10 +283,93 @@ const App = () => {
                 </Row>
             </Panel>
             <Panel header="Saving" key="6">
+                <div className={styles.prose}>General</div>
+                <Form
+                    name="basic"
+                    layout="vertical"
+                >
+                     <Form.Item
+                        label="Custom Model Name"
+                        name="Custom Model Name"
+                        >
+                        <Input type="textarea" placeholder="Enter a model name for saving checkpoints and lora models."/>
+                    </Form.Item>
 
+                    <Form.Item
+                        label=""
+                        name="Custom Model Name"
+                        >
+                        <Checkbox>Generate a .ckpt file when training is canceled.</Checkbox>
+                    </Form.Item>
+
+
+                </Form>
             </Panel>
             <Panel header="Extra" key="7">
+                <div className={styles.prose}>Sanity Samples</div>
+                <Form
+                    name="basic"
+                    layout="vertical"
+                >
+                    <Form.Item
+                        label="Sanity Sample Prompt"
+                        name="Sanity Sample Prompt"
+                        >
+                        <Input type="textarea" placeholder="A generic prompt used to generate a sample image to verify model fidelity."/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Sanity Sample Negative Prompt"
+                        name="Sanity Sample Negative Prompt"
+                        >
+                        <Input type="textarea" placeholder="A negative prompt for the generic sample image."/>
+                    </Form.Item>
 
+                    <Form.Item
+                        label="Sanity Sample Seed"
+                        name="Sanity Sample Seed"
+                        >
+                        <InputNumber value={seedVal} step={1} />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Max Res"
+                        name="Max Res"
+                        >
+                         <Row gutter={10}>
+                            <Col span={19}>
+                                <Slider
+                                    min={0}
+                                    max={2048}
+                                    value={typeof maxResVal === 'number' ? maxResVal : 0}
+                                    step={64}
+                                />
+                            </Col>
+                            <Col span={3}>
+                                <InputNumber min={0} max={2048} value={maxResVal} step={64} />
+                            </Col>
+                        </Row>   
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Bucket Steps"
+                        name="Bucket Steps"
+                        >
+                         <Row gutter={10}>
+                            <Col span={19}>
+                                <Slider
+                                    min={0}
+                                    max={512}
+                                    value={typeof bucketStepsVal === 'number' ? bucketStepsVal : 0}
+                                    step={8}
+                                />
+                            </Col>
+                            <Col span={3}>
+                                <InputNumber min={0} max={512} value={bucketStepsVal} step={8} />
+                            </Col>
+                        </Row>   
+                    </Form.Item>
+
+                </Form>
             </Panel>
         </Collapse>
     </div>

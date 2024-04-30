@@ -51,7 +51,6 @@ const App = () => {
           <Col span={6}><Button style={{width: '100%'}} onClick={LoadingSetting}>Load Settings</Button></Col>
           <Col span={6}><Button style={{width: '100%'}} onClick={SaveSetting}>Save Settings</Button></Col>
           <Col span={6}><Button style={{width: '100%'}} onClick={Training}>Train</Button></Col>
-          <Col span={6}><Button style={{width: '100%'}} onClick={GenerateCkpt}>Generate Ckpt</Button></Col>
         </Row>
         {attr?.name ? 
         <Row>
