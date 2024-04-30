@@ -2,12 +2,13 @@ import axiosInstance from './index';
 
 const Api = {
     getModels: () => axiosInstance.get(`/sd/model/configs`),
-    setModel: (model) => axiosInstance.get(`/set/sd/model?${model}`),
-    modelDetail: (model) => axiosInstance.get(`/db/model/info?modelName=${model}`), // 查询模型配置信息
-    editModel: (data) => axiosInstance.post(`/db/modified/model/info`, data), // 修改模型配置信息
-    saveModel: (data) => axiosInstance.post(`/db/model/save`, data), // 保存模型配置信息
-    trainJob: (name) => axiosInstance.get(`/db/train/job?modelName=${name}&useTx2img=true`), // 执行任务
-    cancelJob: () => axiosInstance.get(`/db/cancel/job`) // 取消任务
+    setModel: (modelName) => axiosInstance.get(`/set/sd/model?modelName=${modelName}`),
+    createDBModel: model => axiosInstance.post(`/db/model/save`, model), //创建dreambooth模型配置信息，第一次创建可不传配置信息
+    trainJob: (modelName) => axiosInstance.post(`/db/train/job?modelName=${modelName}&useTx2img=true`),  //执行dreambooth任务
+    cancelJob: () => axiosInstance.get(`/db/cancel/job`),  //取消dreambooth任务
+    getDbModels: (modelName) => axiosInstance.get(`/db/model/info?modelName=${modelName}`), //获取指定模型配置信息
+    getDbModelNames: () => axiosInstance.get(`/db/model/name/list`), //查询模型名称
+    updateDbModelNames: (model) => axiosInstance.post(`/db/modified/model/info`,model) //查询模型名称
 }
 
 export default Api
