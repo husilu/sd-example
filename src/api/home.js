@@ -7,7 +7,7 @@ const Api = {
     trainJob: (modelName) => axiosInstance.post(`/db/train/job?modelName=${modelName}&useTx2img=true`),  //执行dreambooth任务
     cancelJob: () => axiosInstance.get(`/db/cancel/job`),  //取消dreambooth任务
     getDbModels: (modelName) => axiosInstance.get(`/db/model/info?modelName=${modelName}`), //获取指定模型配置信息
-    getDbModelNames: () => axiosInstance.get(`/db/model/name/list`), //查询模型名称
+    getDbModelNames: () => axiosInstance.get(`/db/model/name/list`), //查询dreambooth模型列表
     updateDbModelNames: (model) => axiosInstance.post(`/db/modified/model/info`,model) //查询模型名称
 }
 

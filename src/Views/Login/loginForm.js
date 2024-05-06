@@ -16,6 +16,8 @@ const App = (props) => {
             dispatch(getUser({user: res.data }))
             setloading(false)
         }
+    }).catch(() => {
+        setloading(false)
     })
 }
 
