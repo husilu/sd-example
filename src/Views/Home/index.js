@@ -18,7 +18,7 @@ const Home = () => {
       list = list.map(item => {
         return {
           label: item.modelName,
-          value: item.title
+          value: item.modelName
         }
       })
       setmodelOptions(list)
@@ -33,7 +33,11 @@ const Home = () => {
   };
 
   const handleChange = (val) => {
-
+    console.log(val)
+    Api.setModel(val).then((res) => {
+      console.log(res);
+      setvalue(val);
+    })
   }
 
   const items = [

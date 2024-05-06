@@ -9,6 +9,18 @@ const App = () => {
   const [steps, setsteps] = useState(0);
   const [GenerateVal, setGenerateVal] = useState(1);
   const dreamModel = useSelector(state => state.home.dreamModel);
+
+  const [directory, setDirectory] = useState('');
+  const [prompt, setPrompt] = useState(0);
+  const [instanceToken, setpreInstanceToken] = useState('');
+  const [classToken, setClassToken] = useState('');
+  const [classDirectory, setClassDirectory] = useState('');
+  const [classPrompt, setClassPrompt] = useState('');
+  const [negativePrompt, setNegativePrompt] = useState('');
+  const [sampleImagePrompt, setSampleImagePrompt] = useState('');
+  const [samplePromptTemplateFile, setSamplePromptTemplateFile] = useState('');
+
+
   const onChange = () => {
 
   }
@@ -26,7 +38,7 @@ const App = () => {
           label="Directory"
           name="Directory"
         >
-          <TextArea rows={2} placeholder="Path to directory with input images"/>
+          <TextArea rows={2} placeholder="Path to directory with input images" onChange={(e) => setDirectory(e)}/>
         </Form.Item>
 
         <Form.Item
@@ -34,7 +46,7 @@ const App = () => {
           name="Prompt"
           initialValue={'[filewords]'}
         >
-          <TextArea rows={2} />
+          <TextArea rows={2} onChange={(e) => setPrompt(e)}/>
         </Form.Item>
         <div className={styles.tip}>
           Use [filewords] here to read prompts from caption files/filename, or a prompt to describe your training images.
@@ -48,7 +60,7 @@ const App = () => {
           name="Instance Token"
           initialValue={'[filewords]'}
         >
-          <TextArea rows={2} />
+          <TextArea rows={2} onChange={(e) => setpreInstanceToken(e)}/>
         </Form.Item>
 
         <div className={styles.tip}>
@@ -59,7 +71,7 @@ const App = () => {
           label="Class Token"
           name="Class Token"
         >
-          <TextArea rows={2} />
+          <TextArea rows={2} onChange={(e) => setClassToken(e)}/>
         </Form.Item>
         <div className={styles.tip}>
           If using [filewords] above, this is the generic word used for your subject, like 'dog' or 'person'.
@@ -78,7 +90,7 @@ const App = () => {
           label="Directory"
           name="Directory"
         >
-          <TextArea rows={2} placeholder="(Optional) Path to directory with classification/regularization images"/>
+          <TextArea rows={2} placeholder="(Optional) Path to directory with classification/regularization images" onChange={(e) => setClassDirectory(e)}/>
         </Form.Item>
 
         <Form.Item
@@ -86,7 +98,7 @@ const App = () => {
           name="Prompt"
           initialValue={'[filewords]'}
         >
-          <TextArea rows={2} />
+          <TextArea rows={2} onChange={(e) => setClassPrompt(e)}/>
         </Form.Item>
         <div className={styles.tip}>
           Use [filewords] here to read prompts from caption files/filename, or a prompt to describe your training images.
@@ -99,7 +111,7 @@ const App = () => {
           label="Negative Prompt"
           name="Negative Prompt"
         >
-          <TextArea rows={2} />
+          <TextArea rows={2} onChange={(e) => setNegativePrompt(e)}/>
         </Form.Item>
 
         <Form.Item
@@ -109,7 +121,7 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
             <Slider
-                onChange={onChange}
+                onChange={(e)=>setpreInstance(e)}
                 min={0}
                 max={100}
                 value={typeof preInstance === 'number' ? preInstance : 0}
@@ -132,7 +144,7 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
               <Slider
-                  onChange={onChange}
+                  onChange={(e)=>setcfgScale(e)}
                   min={1}
                   max={12}
                   value={typeof cfgScale === 'number' ? cfgScale : 0}
@@ -153,7 +165,7 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
               <Slider
-                  onChange={onChange}
+                  onChange={(e)=>setsteps(e)}
                   min={10}
                   max={200}
                   value={typeof steps === 'number' ? steps : 0}
@@ -180,7 +192,7 @@ const App = () => {
             name="Sample Image Prompt"
             initialValue={'[filewords]'}
           >
-            <TextArea rows={2} />
+            <TextArea rows={2} onChange={(e) => setSampleImagePrompt(e)}/>
           </Form.Item>
           <div className={styles.tip}>
             A prompt to generate samples from, or use [filewords] here to randomly select prompts from the existing instance prompt(s).
@@ -190,7 +202,7 @@ const App = () => {
             name="Sample Prompt Template File"
             placeholder="Enter the path to a txt file containing sample prompts."
           >
-            <TextArea rows={2} />
+            <TextArea rows={2} onChange={(e) => setSamplePromptTemplateFile(e)}/>
           </Form.Item>
           <div className={styles.tip}>
             When enabled the above prompt and negative prompt will be ignored.
@@ -202,7 +214,7 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
               <Slider
-                  onChange={onChange}
+                  onChange={(e)=>setGenerateVal(e)}
                   min={0}
                   max={100}
                   value={typeof GenerateVal === 'number' ? GenerateVal : 0}

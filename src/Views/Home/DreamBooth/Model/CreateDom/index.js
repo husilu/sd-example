@@ -1,13 +1,30 @@
 import { Button, Form, Input, Select } from "antd"
 import styles from './styles.module.scss'
 import { useDispatch, useSelector } from 'react-redux';
+import {useState} from "react";
+import Api from '../../../../../api/home'
 const { Option } = Select;
 
 const App = () => {
   const modelConfig = useSelector(state => state.home.modelConfig);
+  const [modelName,setModelName]=useState('');
+  const [modelType,setModelType]=useState('');
+  const [source,setSource]=useState('');
+
 
   const createModel = () => {
-
+    let model={
+      newModelName:modelName,
+      newModelSrc:source,
+      modelType:modelType
+    }
+    debugger;
+    Api.createDBModel(model).then(res => {
+      // if(res.data.code===200){
+      //
+      // }
+      console.log(res)
+    })
   }
   const onFinish = () => {
 
@@ -18,7 +35,6 @@ const App = () => {
   }
 
   const getRandom = () => {
-
   }
 
   const typeOptions = [
@@ -43,7 +59,7 @@ const App = () => {
           label="Name"
           name="model_name"
         >
-          <Input type="textarea"/>
+          <Input type="textarea" value={modelName} onChange={(e) => setModelName(e.target.value)}/>
         </Form.Item>
 
         <Form.Item
@@ -55,6 +71,7 @@ const App = () => {
                     width: '100%',
                 }}
                 options={typeOptions}
+                onChange={(e)=>setModelType(e)}
             >
                 
           </Select>
@@ -70,6 +87,7 @@ const App = () => {
                     width: '100%',
                 }}
                 options={modelConfig}
+                onChange={(e)=>setSource(e)}
             >
           </Select>
           
