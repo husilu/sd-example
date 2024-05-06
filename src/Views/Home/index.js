@@ -1,14 +1,17 @@
 import { Tabs, Select } from "antd";
 import { useEffect, useState } from 'react';
+import {useDispatch} from 'react-redux';
 import DreamBooth from './DreamBooth';
 import TxtToImg from './txtToImg'; // Add the missing import statement
 import ImgToImg from './imgToImg';
 import Api from '../../api/home';
+import { getModelConfig } from '@/store/reducers/homeReducer'; // 导入loginSuccess action
 
 const Home = () => {
   const [modelOptions, setmodelOptions] = useState([]);
   const [value, setvalue] = useState("");
   const [tabValue, settabValue] = useState();
+  const dispatch = useDispatch(); // 获取dispatch函数
   useEffect(() => {
     Api.getModels().then(res => {
       let list = res.data.list
@@ -19,6 +22,7 @@ const Home = () => {
         }
       })
       setmodelOptions(list)
+      dispatch(getModelConfig({ modelConfig: list }));
       setvalue(list[0].value)
     })
   }, []); // 第二个参数是一个空数组，表示effect仅在组件挂载和卸载时执行

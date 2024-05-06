@@ -1,12 +1,14 @@
 import { Tabs, Form, Input, Slider, InputNumber, Col, Row } from "antd";
 import styles from './styles.module.scss';
 import {useState} from 'react'
+import {useSelector} from 'react-redux'
 const { TextArea } = Input;
 const App = () => {
   const [preInstance, setpreInstance] = useState(0);
   const [cfgScale, setcfgScale] = useState(0);
   const [steps, setsteps] = useState(0);
   const [GenerateVal, setGenerateVal] = useState(1);
+  const dreamModel = useSelector(state => state.home.dreamModel);
   const onChange = () => {
 
   }
@@ -18,6 +20,7 @@ const App = () => {
       children: (<Form
         name="basic"
         layout="vertical"
+        disabled={!dreamModel}
       >
         <Form.Item
           label="Directory"
@@ -69,7 +72,7 @@ const App = () => {
       children: (<Form
       name="basic"
       layout="vertical"
-      disabled={true}
+      disabled={!dreamModel}
       >
         <Form.Item
           label="Directory"
@@ -170,7 +173,7 @@ const App = () => {
         <Form
           name="basic"
           layout="vertical"
-          disabled={true}
+          disabled={!dreamModel}
         >
           <Form.Item
             label="Sample Image Prompt"

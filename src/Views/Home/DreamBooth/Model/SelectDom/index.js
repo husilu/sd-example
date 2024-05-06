@@ -1,13 +1,19 @@
 
 import { Select } from 'antd';
 import { useState, useEffect } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles.module.scss'
 import Api from '@/api/home'
+import { changeModel } from '@/store/reducers/homeReducer'; // 导入loginSuccess action
 export default function App() {
-  const [value, setvalue] = useState("jack");
+  const dreamModel = useSelector(state => state.home.dreamModel);
   const [modelOptions, setmodelOptions] = useState([])
-  const handleChange = () => {
-    
+  const dispatch = useDispatch(); // 获取dispatch函数
+  const handleChange = (val) => {
+    dispatch(changeModel({ dreamModel: val }));
+    Api.getDbModels(val).then(res => {
+      console.log('res', res)
+    })
   }
   const getRandom = () => {
     Api.getDbModelNames().then(res => {
@@ -32,7 +38,6 @@ export default function App() {
        }
       })
       setmodelOptions(list)
-      setvalue(list[0].value)
     })
   }, []); // 第二个参数是一个空数组，表示effect仅在组件挂载和卸载时执行
 
@@ -42,16 +47,16 @@ export default function App() {
       <div>Model</div>
       <div className={`${styles['flex-center']} ${styles['mb10']}`}>
         <Select
-          value={value}
+          value={dreamModel}
           style={{
             width: '90%'
           }}
           onChange={handleChange}
           options={modelOptions}
         />
-        <div onClick={getRandom} className={styles['r-btn']}>
+        {/* <div onClick={getRandom} className={styles['r-btn']}>
           🔄
-        </div>
+        </div> */}
     </div>
     </>
   )

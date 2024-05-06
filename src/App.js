@@ -5,9 +5,8 @@ import Login from './Views/Login';
 import { ConfigProvider } from 'antd';
 // 导入路由依赖
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Api from './api/user'
-import { useDispatch } from 'react-redux'; // 导入useDispatch hook
 import { getUser } from './store/reducers/authReducer'; // 导入loginSuccess action
 function App() {
     const isLoggedIn = useSelector(state => state.auth.token);

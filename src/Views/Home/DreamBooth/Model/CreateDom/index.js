@@ -1,8 +1,11 @@
 import { Button, Form, Input, Select } from "antd"
 import styles from './styles.module.scss'
+import { useDispatch, useSelector } from 'react-redux';
 const { Option } = Select;
 
 const App = () => {
+  const modelConfig = useSelector(state => state.home.modelConfig);
+
   const createModel = () => {
 
   }
@@ -18,6 +21,14 @@ const App = () => {
 
   }
 
+  const typeOptions = [
+    {label: "v1x", value: "v1x  "},
+    {label: "v2x-512", value: "v2x-512"},
+    {label: "v2x", value: "v2x"},
+    {label: "SDXL", value: "SDXL"},
+    {label: "ControlNet", value: "ControlNet"}
+  ]
+
   return (
     <>
       <Form
@@ -30,48 +41,40 @@ const App = () => {
         <Button onClick={createModel} htmlType="submit" className={styles.createBtn}>Create Model</Button>
         <Form.Item
           label="Name"
-          name="name"
+          name="model_name"
         >
           <Input type="textarea"/>
         </Form.Item>
 
         <Form.Item
           label="Model Type"
-          name="type"
+          name="model_type"
         >
           <Select
                 style={{
                     width: '100%',
                 }}
-                defaultValue="86"
+                options={typeOptions}
             >
-                <Option value="86">+86</Option>
+                
           </Select>
 
         </Form.Item>
 
         <Form.Item
           label="Source Checkpoint"
-          name="source"
+          name="src"
         >
-          <div className={styles['flex-center']}>
             <Select
                 style={{
                     width: '100%',
                 }}
-                defaultValue="86"
+                options={modelConfig}
             >
-                <Option value="86">+86</Option>
           </Select>
-          <div onClick={getRandom} className={styles['r-btn']}>
-            🔄
-          </div>
-          </div>
           
         </Form.Item>
     </Form>
-      
-      
     </>
   )
 }

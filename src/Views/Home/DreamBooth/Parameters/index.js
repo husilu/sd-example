@@ -1,6 +1,7 @@
 import { Form, Select, Checkbox, Row, Col, Slider, InputNumber, Collapse, Input } from "antd";
 import { useState } from 'react';
 import styles from './styles.module.scss'
+import {useSelector} from 'react-redux'
 const { Option } = Select;
 const { Panel}  = Collapse;
 
@@ -14,12 +15,14 @@ const App = () => {
     const [seedVal, setseedVal] = useState(420420);
     const [maxResVal, setmaxResVal] = useState(512);
     const [bucketStepsVal, setbucketStepsVal] = useState(8);
+    const dreamModel = useSelector(state => state.home.dreamModel);
     return <div>
         <Collapse defaultActiveKey={['2']}>
             <Panel header="Performance" key="1">
                 <Form
                     name="basic"
                     layout="vertical"
+                    disabled={!dreamModel}
                 >
                 <Form.Item
                     label="Optimizer"
@@ -126,6 +129,7 @@ const App = () => {
             </Panel>
             <Panel header="Intervals" key="2">
                 <Form  
+                    disabled={!dreamModel}
                     name="basic"
                     layout="vertical">
                     <Form.Item
@@ -187,6 +191,7 @@ const App = () => {
             <Panel header="Learning Rate" key="3">
                 <Form
                     name="basic"
+                    disabled={!dreamModel}
                     layout="vertical">
                         <Row>
                             <Col span={12}>
@@ -203,7 +208,7 @@ const App = () => {
                     </Form>   
             </Panel>
             <Panel header="Lora" key="4">
-                <Form>
+                <Form disabled={!dreamModel}>
                     <Form.Item
                         label=""
                         name="Use LORA"
@@ -275,10 +280,11 @@ const App = () => {
                             max={2048}
                             value={typeof rankVal === 'number' ? rankVal : 0}
                             step={64}
+                            disabled={!dreamModel}
                         />
                     </Col>
                     <Col span={3}>
-                        <InputNumber min={2} max={2048} value={rankVal} step={64} />
+                        <InputNumber min={2} max={2048} value={rankVal} step={64} disabled={!dreamModel}/>
                     </Col>
                 </Row>
             </Panel>
@@ -287,6 +293,7 @@ const App = () => {
                 <Form
                     name="basic"
                     layout="vertical"
+                    disabled={!dreamModel}
                 >
                      <Form.Item
                         label="Custom Model Name"
@@ -310,6 +317,7 @@ const App = () => {
                 <Form
                     name="basic"
                     layout="vertical"
+                    disabled={!dreamModel}
                 >
                     <Form.Item
                         label="Sanity Sample Prompt"
@@ -368,7 +376,6 @@ const App = () => {
                             </Col>
                         </Row>   
                     </Form.Item>
-
                 </Form>
             </Panel>
         </Collapse>
