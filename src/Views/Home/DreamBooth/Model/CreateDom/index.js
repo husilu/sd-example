@@ -20,9 +20,9 @@ const App = () => {
     }
     debugger;
     Api.createDBModel(model).then(res => {
-      // if(res.data.code===200){
-      //
-      // }
+      if(res.data.code===200){
+        alert("创建成功");
+      }
       console.log(res)
     })
   }

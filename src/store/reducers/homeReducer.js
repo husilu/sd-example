@@ -4,7 +4,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   menu: false,
   dreamModel: "",
-  modelConfig: []
+  modelConfig: [],
+  dreamModelInfo:{}
 };
 
 const authSlice = createSlice({
@@ -20,9 +21,12 @@ const authSlice = createSlice({
     getModelConfig(state, action) {
       state.modelConfig = action.payload.modelConfig;
     },
+    getDreamModelInfo(state, action){
+      state.dreamModelInfo = action.payload.dreamModelInfo;
+    }
   },
 });
 
-export const { changeMenu, changeModel, getModelConfig } = authSlice.actions;
+export const { changeMenu, changeModel, getModelConfig,getDreamModelInfo } = authSlice.actions;
 
 export default authSlice.reducer;
