@@ -9,28 +9,28 @@ const {Panel} = Collapse;
 
 const App = () => {
     const [formObj, setformObj] = useState({
+
         stopTextEncoder: 0,
         clipSkip: 0,
         numTrainEpochs:0,
         saveEmbeddingEvery: 0,
         savePreviewEvery: 0,
         optimizer: '',
-        mixedPrecision: '',
-        memoryAttention: '',
-        cacheLatents: true,
-        trainUNET: true,
-        shuffleTags: true,
+        sanityPrompt: '',
+        attention: '',
+        sanitySeed: '',
+        trainUnet: true,
+        // shuffleTags: true,
         learningRate: 0.000002,
         learningRateMin: 0.000001,
         useLora: false,
         loraUNETRank: 0,
         loraTxtRank: 0,
         loraWeight: 0,
-        maxResolution: 512,
+        resolution: 512,
         customModelName: '',
         saveCkptCancel: false,
         mixedPrecision: "",
-        MemoryAttention: "",
         cacheLatents: true,
         shuffleTags: true
     });
@@ -272,7 +272,7 @@ const App = () => {
                                 width: '100%',
                             }}
                             defaultValue={undefined === formObj.MemoryAttention || '' === formObj.MemoryAttention || null == formObj.MemoryAttention ? "xformers" : formObj.MemoryAttention}
-                            onChange={(e) => setFormObjDataHandler(e, 'MemoryAttention')}
+                            onChange={(e) => setFormObjDataHandler(e, 'attention')}
                         >
                             <Option value="default">default</Option>
                             <Option value="xformers">xformers</Option>
@@ -291,7 +291,7 @@ const App = () => {
                         label=""
                         name="Train UNET"
                     >
-                        <Checkbox checked={formObj.trainUNET} onChange={(e) => setFormObjDataHandler(e.target.checked, 'trainUNET')}>Train
+                        <Checkbox checked={formObj.trainUNET} onChange={(e) => setFormObjDataHandler(e.target.checked, 'trainUnet')}>Train
                             UNET</Checkbox>
                     </Form.Item>
 
