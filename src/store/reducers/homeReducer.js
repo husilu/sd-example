@@ -13,16 +13,28 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     changeMenu(state, action) {
-      state.menu = action.payload.menu;
+      return {
+        ...state,
+        menu: action.payload.menu
+      };
     },
     changeModel(state, action) {
-      state.dreamModel = action.payload.dreamModel;
+      return {
+        ...state,
+        dreamModel: action.payload.dreamModel
+      };
     },
     getModelConfig(state, action) {
-      state.modelConfig = action.payload.modelConfig;
+      return {
+        ...state,
+        modelConfig: action.payload.modelConfig
+      };
     },
     getDreamModelInfo(state, action){
-      state.dreamModelInfo = action.payload.dreamModelInfo;
+      return {
+        ...state,
+        dreamModelInfo: action.payload.dreamModelInfo
+      };
     }
   },
 });

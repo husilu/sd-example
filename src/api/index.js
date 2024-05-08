@@ -1,11 +1,11 @@
-import React from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import store from '../store'; // 假设你的Redux store被导出为store
+import { logout } from '../store/reducers/authReducer'; // 导入loginSuccess action
 
 const instance = axios.create({
-  // baseURL: 'http://124.71.223.180:8088',
-  baseURL: 'http://localhost:8088',
+  baseURL: 'http://124.71.223.180:8088',
+  // baseURL: 'http://localhost:8088',
 });
 
 // 添加请求拦截器
@@ -27,13 +27,13 @@ instance.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   const data = response.data;
    if (data.responseCode !== '000') {
-    message.warning(response.responseDesc);
-       // return window.location.hash ='/login';
-       if (data.responseCode==='102'){
-           return Promise.reject(new Error('需要登录'));
-       }
-
+      message.warning(data.responseDesc);
    }
+   if (data.responseCode === 102){
+    window.location.href ='/login';
+    store.dispatch(logout())
+    return Promise.reject(data.responseDesc);
+  }
    return response.data;
 }, function (error) {
   // 超出 2xx 范围的状态码都会触发该函数。

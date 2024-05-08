@@ -68,7 +68,6 @@ const App = () => {
   }, [prompt,directory,instanceToken,classToken,classDirectory,classPrompt,negativePrompt,sampleImagePrompt,samplePromptTemplateFile,preInstance,cfgScale,steps,GenerateVal]);
 
   useEffect(() => {
-    debugger;
     console.log("concept 读取查询数据")
     if(dreamModelInfo.conceptsList.length>0){
       let element = dreamModelInfo.conceptsList[0];
@@ -86,7 +85,7 @@ const App = () => {
       setSampleImagePrompt(element.saveSamplePrompt);
       setSamplePromptTemplateFile(element.saveSampleTemplate);
     }
-  }, [dreamModelInfo]);
+  }, [dreamModelInfo.conceptsList]);
 
   const onChangePreInstance=(v)=>{
    setpreInstance(v);
