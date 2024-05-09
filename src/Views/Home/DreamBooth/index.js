@@ -117,21 +117,21 @@ const App = () => {
         }
     }
 
-    // useEffect(()=>{
-    //     debugger;
-    //     const intervalId = setInterval(() => {
-    //         if (active) {
-    //             getJobStatus();
-    //         } else {
-    //             getJobImg();
-    //             clearInterval(intervalId);
-    //         }
-    //     }, INTERVAL);
-    //     // 清理函数，虽然在这个场景下可能不需要显式清除定时器，因为我们在interval内部已经做了判断
-    //     return () => {
-    //         clearInterval(intervalId);
-    //     };
-    // }, [active]);// 依赖数组包含isDone和isFetching，确保状态改变时能重新评估是否继续请求
+    useEffect(()=>{
+        debugger;
+        const intervalId = setInterval(() => {
+            if (active) {
+                getJobStatus();
+            } else {
+                getJobImg();
+                clearInterval(intervalId);
+            }
+        }, INTERVAL);
+        // 清理函数，虽然在这个场景下可能不需要显式清除定时器，因为我们在interval内部已经做了判断
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [active]);// 依赖数组包含isDone和isFetching，确保状态改变时能重新评估是否继续请求
 
 const GenerateCkpt = () => {
 
