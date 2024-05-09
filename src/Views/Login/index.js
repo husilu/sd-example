@@ -10,6 +10,9 @@ export default function LoginOrRegister() {
     const loginRef = useRef()
     const registerRef = useRef()
     const [tabValue, settabValue] = useState("login");
+    const settabValuetoLogin = () => {
+        settabValue('login')
+    }
     const items = [
         {
             key: 'login',
@@ -19,11 +22,12 @@ export default function LoginOrRegister() {
           {
             key: 'register',
             label: '注册',
-            children: <Register childRef={registerRef} toLogin={useState("login")}></Register>,
+            children: <Register childRef={registerRef} toLogin={settabValuetoLogin}></Register>,
         },
     ]
+    
     const onChange = (activeKey) => {
-        // Execute methods in Login and Register components based on the activeKey
+        settabValue(activeKey)
         if (activeKey === 'login') {
             loginRef.current?.resetForm()
         } else if (activeKey === 'register') {
@@ -33,7 +37,7 @@ export default function LoginOrRegister() {
   return (
       <div className="login-page">
            <div className="login-form">
-                <Tabs value={tabValue} items={items} onChange={onChange} type="card"/>
+                <Tabs activeKey={tabValue} items={items} onChange={onChange} type="card"/>
            </div>
       </div>
   )

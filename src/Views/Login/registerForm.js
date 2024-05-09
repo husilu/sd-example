@@ -23,14 +23,12 @@ const App = (props) => {
         }
         Api.registerApi(obj).then((res)=>{
             // localStorage.setItem('token', '1')
-            console.log('res', res)
             messageApi.open({
                 type: 'success',
                 content: '注册成功！',
             });
             toLogin();
-            // setloading(false)
-            
+            setloading(false)
         })
     };
 
