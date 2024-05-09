@@ -16,7 +16,9 @@ export default function App() {
     dispatch(changeModel({ dreamModel: val }));
     Api.getDbModels(val).then(res => {
       console.log('res', res)
-        dispatch(getDreamModelInfo({ dreamModelInfo:res.data }));
+        if (res.data){
+            dispatch(getDreamModelInfo({ dreamModelInfo:res.data }));
+        }
     })
   }
 

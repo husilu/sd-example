@@ -48,6 +48,7 @@ const App = () => {
   //     } }));
   }
   useEffect(() => {
+    debugger;
     dispatch(getDreamModelInfo({ dreamModelInfo: {
         conceptsList:[{
           instancePrompt: prompt,
@@ -69,7 +70,7 @@ const App = () => {
 
   useEffect(() => {
     console.log("concept 读取查询数据")
-    if(dreamModelInfo.conceptsList.length>0){
+    if(dreamModelInfo && dreamModelInfo.conceptsList &&dreamModelInfo.conceptsList.length>0){
       let element = dreamModelInfo.conceptsList[0];
       setpreInstance(element.numClassImagesPer);
       setcfgScale(element.classGuidanceScale);

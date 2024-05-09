@@ -22,6 +22,7 @@ export default function App() {
     }, [value]);
     const downLoadHandler = (fileName) => {
         Api.download(value, fileName).then(res => {
+            debugger;
             console.log("res", res)
         })
     }
