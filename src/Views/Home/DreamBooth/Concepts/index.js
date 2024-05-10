@@ -1,9 +1,9 @@
-import { Tabs, Form, Input, Slider, InputNumber, Col, Row } from "antd";
+import {Col, Form, Input, InputNumber, Row, Slider, Tabs} from "antd";
 import styles from './styles.module.scss';
-import {useState,useEffect} from 'react'
-import {useSelector} from 'react-redux'
-import {useDispatch} from 'react-redux';
+import {useEffect, useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import {getDreamModelInfo} from "../../../../store/reducers/homeReducer";
+
 const { TextArea } = Input;
 const App = () => {
   const dispatch = useDispatch(); // 获取dispatch函数
@@ -48,7 +48,9 @@ const App = () => {
   //     } }));
   }
   useEffect(() => {
+    debugger;
     dispatch(getDreamModelInfo({ dreamModelInfo: {
+      ...(dreamModelInfo),
         conceptsList:[{
           instancePrompt: prompt,
           instanceDataDir: directory,
@@ -69,7 +71,7 @@ const App = () => {
 
   useEffect(() => {
     console.log("concept 读取查询数据")
-    if(dreamModelInfo.conceptsList.length>0){
+    if(dreamModelInfo && dreamModelInfo.conceptsList &&dreamModelInfo.conceptsList.length>0){
       let element = dreamModelInfo.conceptsList[0];
       setpreInstance(element.numClassImagesPer);
       setcfgScale(element.classGuidanceScale);

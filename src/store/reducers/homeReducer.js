@@ -5,7 +5,7 @@ const initialState = {
   menu: false,
   dreamModel: "",
   modelConfig: [],
-  dreamModelInfo:{}
+  dreamModelInfo:{conceptsList:[]}
 };
 
 const authSlice = createSlice({

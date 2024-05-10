@@ -16,7 +16,7 @@ const App = () => {
     const dreamModelInfo = useSelector(state => state.home.dreamModelInfo);
     const [attr, setattr] = useState(null);
     const dreamModel = useSelector(state => state.home.dreamModel);
-    const [active, setActive] = useState(false);
+    const [active, setActive] = useState();
     const [imgBase64, setImgBase64] = useState('');
     const INTERVAL = 5000; // 每5秒请求一次
     const items = [
@@ -118,12 +118,13 @@ const App = () => {
     }
 
     useEffect(()=>{
-        // debugger;
         const intervalId = setInterval(() => {
             if (active) {
                 getJobStatus();
             } else {
-                getJobImg();
+                if (active!==undefined) {
+                    getJobImg();
+                }
                 clearInterval(intervalId);
             }
         }, INTERVAL);

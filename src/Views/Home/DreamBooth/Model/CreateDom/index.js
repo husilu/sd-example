@@ -20,7 +20,8 @@ const App = () => {
     }
     // debugger;
     Api.createDBModel(model).then(res => {
-      if(res.data.code===200){
+      debugger;
+      if(res.responseCode==='000'){
         alert("创建成功");
       }
       console.log(res)
@@ -38,7 +39,7 @@ const App = () => {
   }
 
   const typeOptions = [
-    {label: "v1x", value: "v1x  "},
+    {label: "v1x", value: "v1x"},
     {label: "v2x-512", value: "v2x-512"},
     {label: "v2x", value: "v2x"},
     {label: "SDXL", value: "SDXL"},
