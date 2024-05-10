@@ -2,6 +2,7 @@ import { Col, Row, Slider, Card, Select, message, Spin } from 'antd';
 import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import Api from '../../api/img.js';
 import { useEffect, useState } from 'react';
+const baseURL =  'http://124.71.223.180:8088'
 
 
 const { Meta } = Card;
@@ -80,9 +81,9 @@ export default function App() {
             </Row>
             <Spin spinning={loading}>
             <Row gutter={16}>
-                
                     {list.map(item => {
-                        return <Col span={6}><Card
+                        return <Col span={6}>
+                            <Card
                             key={item.fileName}
                             bordered={false}
                             hoverable
@@ -91,7 +92,9 @@ export default function App() {
                                 marginBottom: '15px'
                             }}
                             actions={[
-                                <CloudDownloadOutlined key="CloudDownloadOutlined" onClick={() => downLoadHandler(item.fileName)} title="下载"/>,
+                                <a href={`${baseURL}/img/download/${value}?fileName=${item.fileName}`}>
+                                    <CloudDownloadOutlined key="CloudDownloadOutlined" title="下载"/>
+                                </a>,
                                 <DeleteOutlined key="DeleteOutlined" onClick={() => deleteHandler(item.fileName)} title="删除"/>
                             ]}
                             cover={<img alt="example" style={{ 'objectFit': 'cover' }} src={item.imgUrl} />}

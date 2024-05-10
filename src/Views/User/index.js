@@ -1,7 +1,6 @@
-import { Button, Form, Input, Select, message } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import Api from '../../api/user';
 import { useSelector } from 'react-redux';
-const { Option } = Select;
 
 const App = () => {
     const user = useSelector(state => state.auth.user);
@@ -20,19 +19,6 @@ const App = () => {
         console.log('Failed:', errorInfo);
     };
 
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-            <Select
-                style={{
-                    width: 70,
-                }}
-                defaultValue="86"
-            >
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-            </Select>
-        </Form.Item>
-    );
     return <>
         {contextHolder}
         <Form
@@ -102,7 +88,6 @@ const App = () => {
                 ]}
             >
                 <Input
-                    addonBefore={prefixSelector}
                     style={{
                         width: '100%',
                     }}

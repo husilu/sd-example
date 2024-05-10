@@ -56,7 +56,7 @@ const App = () => {
 
     const SaveSetting = () => {
         if (dreamModel) {
-            debugger;
+            // debugger;
             Api.updateDbModelNames(dreamModelInfo).then(r => {
                 if (r.responseCode === '000') {
                     console.log(r.data);
@@ -93,10 +93,10 @@ const App = () => {
 
     const getJobStatus = () => {
         Api.getJobStatus().then(res => {
-            debugger;
+            // debugger;
             if (res.responseCode === '000') {
                 console.log("res=", res.data)
-                debugger;
+                // debugger;
                 let temp = undefined === res.data || null === res.data.data ? false : res.data;
                 setActive(temp);
             } else {
@@ -118,7 +118,7 @@ const App = () => {
     }
 
     useEffect(()=>{
-        debugger;
+        // debugger;
         const intervalId = setInterval(() => {
             if (active) {
                 getJobStatus();

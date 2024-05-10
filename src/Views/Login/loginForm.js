@@ -1,13 +1,14 @@
 import { Button, Form, Input } from 'antd';
 import Api from '../../api/user';
-import { useImperativeHandle, useState } from 'react'
+import { useImperativeHandle, useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'; // 导入useDispatch hook
 import { loginSuccess, getUser } from '../../store/reducers/authReducer'; // 导入loginSuccess action
 
 const App = (props) => {
     const dispatch = useDispatch(); // 获取dispatch函数
-    const { childRef } = props;
+    const { childRef, name } = props;
     const [loading, setloading] = useState(false);
+    const [form] = Form.useForm();
     const onFinish = (values) => {
         setloading(true)
     Api.loginApi(values).then((res)=> {
@@ -26,15 +27,20 @@ useImperativeHandle(childRef, () => ({
 }))
 
 const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
 };
 
 const resetForm = () => {
-    console.log(' reset ')
 };
+
+useEffect(() => {
+    form.setFieldsValue({
+        name: name // 设置初始值
+    });
+}, [name]);
 
 return <>
     <Form
+        form={form}
         name="basic"
         labelCol={{
             span: 8,

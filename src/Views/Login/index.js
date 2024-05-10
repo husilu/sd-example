@@ -10,14 +10,16 @@ export default function LoginOrRegister() {
     const loginRef = useRef()
     const registerRef = useRef()
     const [tabValue, settabValue] = useState("login");
-    const settabValuetoLogin = () => {
+    const [nameVal, setnameVal] = useState("");
+    const settabValuetoLogin = (val) => {
+        setnameVal(val)
         settabValue('login')
     }
     const items = [
         {
             key: 'login',
             label: '登录',
-            children: <Login childRef={loginRef} ></Login>,
+            children: <Login childRef={loginRef} name={nameVal}></Login>,
           },
           {
             key: 'register',

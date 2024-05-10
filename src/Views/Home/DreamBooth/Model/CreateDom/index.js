@@ -18,7 +18,7 @@ const App = () => {
       newModelSrc:source,
       modelType:modelType
     }
-    debugger;
+    // debugger;
     Api.createDBModel(model).then(res => {
       if(res.data.code===200){
         alert("创建成功");

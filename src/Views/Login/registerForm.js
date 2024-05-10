@@ -1,7 +1,6 @@
 import { Button, Form, Input, Select, message } from 'antd';
 import { useImperativeHandle, useState} from 'react';
 import Api from '../../api/user';
-const { Option } = Select;
 
 const App = (props) => {
     const { childRef, toLogin } = props;
@@ -13,7 +12,6 @@ const App = (props) => {
     }))
 
     const onFinish = (values) => {
-        console.log(values)
         setloading(true)
         let obj = {
             name: values.name,
@@ -27,9 +25,10 @@ const App = (props) => {
                 type: 'success',
                 content: '注册成功！',
             });
-            toLogin();
+            toLogin(values.name);
             setloading(false)
         })
+        // toLogin(values.name);
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -40,19 +39,6 @@ const App = (props) => {
         console.log('register reset')
     };
 
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-            <Select
-                style={{
-                    width: 70,
-                }}
-                defaultValue="86"
-            >
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-            </Select>
-        </Form.Item>
-    );
     return <>
      {contextHolder}
         <Form
@@ -109,7 +95,6 @@ const App = (props) => {
                 ]}
             >
                 <Input
-                    addonBefore={prefixSelector}
                     style={{
                         width: '100%',
                     }}
