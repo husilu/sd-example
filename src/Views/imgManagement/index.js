@@ -1,4 +1,4 @@
-import { Col, Row, Slider, Card, Select, message, Spin } from 'antd';
+import { Col, Row, Card, Select, message, Spin } from 'antd';
 import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import Api from '../../api/img.js';
 import { useEffect, useState } from 'react';

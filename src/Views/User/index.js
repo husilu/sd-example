@@ -33,16 +33,16 @@ const App = () => {
                 maxWidth: 600,
             }}
             initialValues={{
-                username: user.name,
+                name: user.name,
                 email: user.email
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-              <Form.Item
+              {/* <Form.Item
                   label="用户名"
-                  name="username"
+                  name="name"
                   rules={[
                       {
                           required: true,
@@ -51,7 +51,7 @@ const App = () => {
                   ]}
               >
                   <Input />
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item
                   label="密码"

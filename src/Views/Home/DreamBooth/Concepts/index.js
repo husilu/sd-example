@@ -2,31 +2,29 @@ import {Col, Form, Input, InputNumber, Row, Slider, Tabs} from "antd";
 import styles from './styles.module.scss';
 import {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {getDreamModelInfo} from "../../../../store/reducers/homeReducer";
+import {getDreamModelInfo, editDreamModelInfo} from "../../../../store/reducers/homeReducer";
+
 
 const { TextArea } = Input;
 const App = () => {
   const dispatch = useDispatch(); // 获取dispatch函数
+  const [form1] = Form.useForm();
+
+  const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
   const dreamModelInfo = useSelector(state => state.home.dreamModelInfo);
-  const [preInstance, setpreInstance] = useState(0);
-  const [cfgScale, setcfgScale] = useState(0);
-  const [steps, setsteps] = useState(0);
-  const [GenerateVal, setGenerateVal] = useState(1);
   const dreamModel = useSelector(state => state.home.dreamModel);
 
-  const [directory, setDirectory] = useState('');
-  const [prompt, setPrompt] = useState('');
-  const [instanceToken, setpreInstanceToken] = useState('');
-  const [classToken, setClassToken] = useState('');
-  const [classDirectory, setClassDirectory] = useState('');
-  const [classPrompt, setClassPrompt] = useState('');
-  const [negativePrompt, setNegativePrompt] = useState('');
-  const [sampleImagePrompt, setSampleImagePrompt] = useState('');
-  const [samplePromptTemplateFile, setSamplePromptTemplateFile] = useState('');
+  const setFormObjDataHandler = (val, key) => {
+    dispatch(editDreamModelInfo({dreamModelInfo: {...dreamModelInfo, conceptsList: [val]}}))
+}
 
-
-  console.log('88888888888888',dreamModelInfo);
-  console.log('preInstance',preInstance);
+useEffect(() => {
+    form1.setFieldsValue({...dreamModelInfo});
+    form2.setFieldsValue({...dreamModelInfo});
+    form3.setFieldsValue({...dreamModelInfo});  
+}, [dreamModelInfo]);
+  
   const onChange = () => {
   //   console.log('onChange',preInstance);
   //   dispatch(getDreamModelInfo({ dreamModelInfo: {
@@ -47,69 +45,6 @@ const App = () => {
   //       }]
   //     } }));
   }
-  useEffect(() => {
-    debugger;
-    dispatch(getDreamModelInfo({ dreamModelInfo: {
-      ...(dreamModelInfo),
-        conceptsList:[{
-          instancePrompt: prompt,
-          instanceDataDir: directory,
-          instanceToken: instanceToken,
-          classToken: classToken,
-          classDataDir: classDirectory,
-          classPrompt: classPrompt,
-          classNegativePrompt: negativePrompt,
-          saveSamplePrompt: sampleImagePrompt,
-          saveSampleTemplate: samplePromptTemplateFile,
-          numClassImagesPer: preInstance,
-          classGuidanceScale: cfgScale,
-          classInferSteps: steps,
-          nSaveSample:GenerateVal
-        }]
-      } }));
-  }, [prompt,directory,instanceToken,classToken,classDirectory,classPrompt,negativePrompt,sampleImagePrompt,samplePromptTemplateFile,preInstance,cfgScale,steps,GenerateVal]);
-
-  useEffect(() => {
-    console.log("concept 读取查询数据")
-    if(dreamModelInfo && dreamModelInfo.conceptsList &&dreamModelInfo.conceptsList.length>0){
-      let element = dreamModelInfo.conceptsList[0];
-      setpreInstance(element.numClassImagesPer);
-      setcfgScale(element.classGuidanceScale);
-      setsteps(element.classInferSteps);
-      setGenerateVal(element.nSaveSample);
-      setDirectory(element.instanceDataDir);
-      setPrompt(element.instancePrompt);
-      setpreInstanceToken(element.instanceToken);
-      setClassToken(element.classToken);
-      setClassDirectory(element.classDataDir);
-      setClassPrompt(element.classPrompt);
-      setNegativePrompt(element.classNegativePrompt);
-      setSampleImagePrompt(element.saveSamplePrompt);
-      setSamplePromptTemplateFile(element.saveSampleTemplate);
-    }
-  }, [dreamModelInfo.conceptsList]);
-
-  const onChangePreInstance=(v)=>{
-   setpreInstance(v);
-    console.log('onChangePreInstance',v)
-    console.log('dreamModelInfo',dreamModelInfo)
-    console.log('preInstance',preInstance)
-  }
-  const onChangeCfgScale=(v)=>{
-    setcfgScale(v)
-    console.log('onChangeCfgScale',v)
-    console.log('preInstance',cfgScale)
-  }
-  const onChangeSteps=(v)=>{
-    setsteps(v)
-    console.log('onChangeSteps',v)
-    console.log('preInstance',steps)
-  }
-  const onchangeGenerateVal=(v)=>{
-    setGenerateVal(v)
-    console.log('onchangeGenerateVal',v)
-    console.log('preInstance',GenerateVal)
-  }
 
   const items = [
     {
@@ -119,20 +54,20 @@ const App = () => {
         name="basic"
         layout="vertical"
         disabled={!dreamModel}
+        form={form1}
       >
         <Form.Item
           label="Directory"
           name="Directory"
         >
-          <TextArea rows={2} placeholder="Path to directory with input images" onChange={(e) => setDirectory(e.target.value)}/>
+          <TextArea rows={2} placeholder="Path to directory with input images" onChange={(e) => setFormObjDataHandler(e.target.value, 'instanceDataDir')}/>
         </Form.Item>
 
         <Form.Item
           label="Prompt"
           name="Prompt"
-          initialValue={'[filewords]'}
         >
-          <TextArea rows={2} onChange={(e) => setPrompt(e.target.value)}/>
+          <TextArea rows={2} onChange={(e) => setFormObjDataHandler(e.target.value, 'instancePrompt')}/>
         </Form.Item>
         <div className={styles.tip}>
           Use [filewords] here to read prompts from caption files/filename, or a prompt to describe your training images.
@@ -144,9 +79,8 @@ const App = () => {
         <Form.Item
           label="Instance Token"
           name="Instance Token"
-          initialValue={'[filewords]'}
         >
-          <TextArea rows={2} onChange={(e) => setpreInstanceToken(e.target.value)}/>
+          <TextArea rows={2} onChange={(e) => setFormObjDataHandler(e.target.value, 'instanceToken')}/>
         </Form.Item>
 
         <div className={styles.tip}>
@@ -157,7 +91,7 @@ const App = () => {
           label="Class Token"
           name="Class Token"
         >
-          <TextArea rows={2} onChange={(e) => setClassToken(e.target.value)}/>
+          <TextArea rows={2} onChange={(e) => setFormObjDataHandler(e.target.value, 'classToken')}/>
         </Form.Item>
         <div className={styles.tip}>
           If using [filewords] above, this is the generic word used for your subject, like 'dog' or 'person'.
@@ -171,12 +105,13 @@ const App = () => {
       name="basic"
       layout="vertical"
       disabled={!dreamModel}
+      form={form2}
       >
         <Form.Item
           label="Directory"
           name="Directory"
         >
-          <TextArea rows={2} placeholder="(Optional) Path to directory with classification/regularization images" onChange={(e) => setClassDirectory(e.target.value)}/>
+          <TextArea rows={2} placeholder="(Optional) Path to directory with classification/regularization images" onChange={(e) => setFormObjDataHandler(e.target.value, 'classDataDir')}/>
         </Form.Item>
 
         <Form.Item
@@ -184,7 +119,7 @@ const App = () => {
           name="Prompt"
           initialValue={'[filewords]'}
         >
-          <TextArea rows={2} onChange={(e) => setClassPrompt(e.target.value)}/>
+          <TextArea rows={2} onChange={(e) => setFormObjDataHandler(e.target.value, 'classPrompt')}/>
         </Form.Item>
         <div className={styles.tip}>
           Use [filewords] here to read prompts from caption files/filename, or a prompt to describe your training images.
@@ -197,7 +132,7 @@ const App = () => {
           label="Negative Prompt"
           name="Negative Prompt"
         >
-          <TextArea rows={2} onChange={(e) => setNegativePrompt(e.target.value)}/>
+          <TextArea rows={2} onChange={(e) => setFormObjDataHandler(e.target.value, 'classNegativePrompt')}/>
         </Form.Item>
 
         <Form.Item
@@ -207,14 +142,13 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
             <Slider
-                onChange={(e)=> onChangePreInstance(e)}
+                onChange={(e)=> setFormObjDataHandler(e, 'numClassImagesPer')}
                 min={0}
                 max={100}
-                value={typeof preInstance === 'number' ? preInstance : 0}
             />
             </Col>
             <Col span={3} className={styles.numInput}>
-              <InputNumber min={0} max={100} value={preInstance}   onChange={(e)=> onChangePreInstance(e)}/>
+              <InputNumber min={0} max={100}   onChange={(e)=> setFormObjDataHandler(e, 'numClassImagesPer')}/>
             </Col>
             </Row>
         </Form.Item>
@@ -230,15 +164,14 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
               <Slider
-                  onChange={(e)=>onChangeCfgScale(e)}
+                  onChange={(e)=>setFormObjDataHandler(e, 'classGuidanceScale')}
                   min={1}
                   max={12}
-                  value={typeof cfgScale === 'number' ? cfgScale : 0}
                   step={0.1}
               />
             </Col>
             <Col span={3} className={styles.numInput}>
-              <InputNumber min={1} max={12} value={cfgScale} onChange={(e)=>onChangeCfgScale(e)} step={0.1}/>
+              <InputNumber min={1} max={12} onChange={(e)=>setFormObjDataHandler(e, 'classGuidanceScale')} step={0.1}/>
             </Col>
             </Row>
         </Form.Item>
@@ -251,14 +184,13 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
               <Slider
-                  onChange={(e)=>onChangeSteps(e)}
+                  onChange={(e)=>setFormObjDataHandler(e, 'classInferSteps')}
                   min={10}
                   max={200}
-                  value={typeof steps === 'number' ? steps : 0}
               />
               </Col>
               <Col span={3} className={styles.numInput}>
-              <InputNumber min={10} max={200} value={cfgScale} onChange={(e)=>onChangeSteps(e)} />
+              <InputNumber min={10} max={200} onChange={(e)=>setFormObjDataHandler(e, 'classInferSteps')} />
             </Col>
           </Row>
         </Form.Item> 
@@ -272,13 +204,14 @@ const App = () => {
           name="basic"
           layout="vertical"
           disabled={!dreamModel}
+          form={form3}
         >
           <Form.Item
             label="Sample Image Prompt"
             name="Sample Image Prompt"
             initialValue={'[filewords]'}
           >
-            <TextArea rows={2} onChange={(e) => setSampleImagePrompt(e.target.value)}/>
+            <TextArea rows={2} onChange={(e) => setFormObjDataHandler(e.target.value, 'saveSamplePrompt')}/>
           </Form.Item>
           <div className={styles.tip}>
             A prompt to generate samples from, or use [filewords] here to randomly select prompts from the existing instance prompt(s).
@@ -288,7 +221,7 @@ const App = () => {
             name="Sample Prompt Template File"
             placeholder="Enter the path to a txt file containing sample prompts."
           >
-            <TextArea rows={2} onChange={(e) => setSamplePromptTemplateFile(e.target.value)}/>
+            <TextArea rows={2} onChange={(e) => setFormObjDataHandler(e.target.value, 'saveSampleTemplate')}/>
           </Form.Item>
           <div className={styles.tip}>
             When enabled the above prompt and negative prompt will be ignored.
@@ -300,15 +233,14 @@ const App = () => {
           <Row gutter={10}>
             <Col span={19}>
               <Slider
-                  onChange={(e)=>onchangeGenerateVal(e)}
+                  onChange={(e)=>setFormObjDataHandler(e, 'nsaveSample')}
                   min={0}
                   max={100}
-                  value={typeof GenerateVal === 'number' ? GenerateVal : 0}
                   step={1}
               />
             </Col>
             <Col span={3} className={styles.numInput}>
-              <InputNumber min={0} max={100} value={GenerateVal} onChange={(e)=>onchangeGenerateVal(e)}/>
+              <InputNumber min={0} max={100} onChange={(e)=>setFormObjDataHandler(e, 'nsaveSample')}/>
             </Col>
             </Row>
         </Form.Item>

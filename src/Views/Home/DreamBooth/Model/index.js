@@ -1,15 +1,19 @@
 import { Tabs } from 'antd';
 import CreateDom from './CreateDom/index.js';
 import SelectDom from './SelectDom/index.js';
+import { useRef } from 'react';
 const App = () => {
+    const selectRef = useRef()
     const onChange = (key) => {
-        console.log(key);
+        if (key === 'Select') {
+            selectRef.current?.getRandom()
+        }
     };
     const items = [
         {
             key: 'Select',
             label: 'Select',
-            children: <SelectDom></SelectDom>,
+            children: <SelectDom childRef={selectRef}></SelectDom>,
         },
         {
             key: 'Create',

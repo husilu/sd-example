@@ -1,45 +1,20 @@
-import {Form, Select, Checkbox, Row, Col, Slider, InputNumber, Collapse, Input} from "antd";
-import {useState, useEffect} from 'react';
+import { Form, Select, Checkbox, Row, Col, Slider, InputNumber, Collapse, Input } from "antd";
+import { useState, useEffect } from 'react';
 import styles from './styles.module.scss'
-import {useDispatch, useSelector} from 'react-redux'
-import {getDreamModelInfo} from "../../../../store/reducers/homeReducer";
+import { useDispatch, useSelector } from 'react-redux'
+import { getDreamModelInfo, editDreamModelInfo } from "../../../../store/reducers/homeReducer";
 
-const {Option} = Select;
-const {Panel} = Collapse;
+const { Option } = Select;
+const { Panel } = Collapse;
 
 const App = () => {
-    const [formObj, setformObj] = useState({
-
-        stopTextEncoder: 0,
-        clipSkip: 0,
-        numTrainEpochs:0,
-        saveEmbeddingEvery: 0,
-        savePreviewEvery: 0,
-        optimizer: '',
-        sanityPrompt: '',
-        attention: '',
-        sanitySeed: '',
-        trainUnet: true,
-        // shuffleTags: true,
-        learningRate: 0.000002,
-        learningRateMin: 0.000001,
-        useLora: false,
-        loraUNETRank: 0,
-        loraTxtRank: 0,
-        loraWeight: 0,
-        resolution: 512,
-        customModelName: '',
-        saveCkptCancel: false,
-        mixedPrecision: "",
-        cacheLatents: true,
-        shuffleTags: true
-    });
-
+    const dreamModelInfo = useSelector(state => state.home.dreamModelInfo);
+    const dreamModel = useSelector(state => state.home.dreamModel);
+    const dispatch = useDispatch(); // 获取dispatch函数
+    const [form] = Form.useForm();
     const setFormObjDataHandler = (val, key) => {
-        setformObj(prevState => ({
-            ...prevState,
-            [key]: val
-        }));
+        console.log( val, key)
+        dispatch(editDreamModelInfo({dreamModelInfo: {...dreamModelInfo, [key]: val}}))
     }
 
 
@@ -50,7 +25,7 @@ const App = () => {
     // const [savePreviewEvery, setSavePreviewEvery] = useState(0);
     // // const [bucketStepsVal, setbucketStepsVal] = useState(8);
 
-    
+
 
     // const [optimizer, setOptimizer] = useState('');
     // const [MixedPrecision, setMixedPrecision] = useState('');
@@ -64,16 +39,14 @@ const App = () => {
     // const [LoraUNETRank, setLoraUNETRank] = useState(0);
     // const [loraTxtRank, setLoraTxtRank] = useState(0);
     // const [LoraWeight, setLoraWeight] = useState(0);
-    const [MaxResolution, setMaxResolution] = useState(512);
+    // const [MaxResolution, setMaxResolution] = useState(512);
     // const [CustomModelName, setCustomModelName] = useState('');
     // const [saveCkptCancel, setSaveCkptCancel] = useState(false);
-    const [SanitySamplePrompt, setSanitySamplePrompt] = useState('');
+    // const [SanitySamplePrompt, setSanitySamplePrompt] = useState('');
     // // const [SanitySampleNegativePrompt, setSanitySampleNegativePrompt] = useState('');
-    const [SanitySampleSeed, setSanitySampleSeed] = useState(420420);
+    // const [SanitySampleSeed, setSanitySampleSeed] = useState(420420);
     // const [MaxRes, setMaxRes] = useState(512);
-    const dreamModel = useSelector(state => state.home.dreamModel);
-    const dispatch = useDispatch(); // 获取dispatch函数
-    const dreamModelInfo = useSelector(state => state.home.dreamModelInfo);
+    
 
     // useEffect(() => {
     //     let conceptsList = dreamModelInfo.conceptsList;
@@ -108,12 +81,21 @@ const App = () => {
     // }, [MemoryAttention, CacheLatents, ClipSkip, CustomModelName, LearningRate, learningRateMin, loraTxtRank, LoraUNETRank, LoraWeight, MixedPrecision, numTrainEpochs, optimizer, MaxResolution, SanitySamplePrompt, SanitySampleSeed, saveCkptCancel, saveEmbeddingEvery, savePreviewEvery]);
 
     useEffect(() => {
-        setformObj(dreamModelInfo)
+        // setformObj(dreamModelInfo)
+        // for(let key in dreamModelInfo) {
+            console.log('dreamModelInfo', dreamModelInfo)
+            form.setFieldsValue({...dreamModelInfo});
+        // }
+        
+    //    form.submit()
+        
     }, [dreamModelInfo]);
 
+    const onFinish = (values) => {
+        console.log('Success:', values);
+      };
 
 
-    
     // const onChangeStopTextEncoder = (val) => {
     //     setformObj(prevState => ({
     //         ...prevState,
@@ -121,12 +103,12 @@ const App = () => {
     //     }));
     // }
 
-    const onChangeClipSkip = (val) => {
-        setformObj(prevState => ({
-            ...prevState,
-            ClipSkip: val
-        }));
-    }
+    // const onChangeClipSkip = (val) => {
+    //     setformObj(prevState => ({
+    //         ...prevState,
+    //         ClipSkip: val
+    //     }));
+    // }
     // const onChangeNumTrainEpochs = (val) => {
     //     setformObj(prevState => ({
     //         ...prevState,
@@ -197,51 +179,54 @@ const App = () => {
     // }
 
     const optimizerOption = [
-        {value: 'Torch AdamW', label: 'Torch AdamW'},
+        { value: 'Torch AdamW', label: 'Torch AdamW' },
         {
             value: 'Adafactor',
             label: 'Adafactor'
-        }, {value: '8bit AdamW', label: '8bit AdamW'}, {
+        }, { value: '8bit AdamW', label: '8bit AdamW' }, {
             value: 'Paged 8bit AdamW',
             label: 'Paged 8bit AdamW'
-        }, {value: 'AdamW Dadaptation', label: 'AdamW Dadaptation'}, {
+        }, { value: 'AdamW Dadaptation', label: 'AdamW Dadaptation' }, {
             value: 'Adan Dadaptation',
             label: 'Adan Dadaptation'
-        }, {value: 'AdanIP Dadaptation', label: 'AdanIP Dadaptation'}, {value: 'Apollo', label: 'Apollo'}, {
+        }, { value: 'AdanIP Dadaptation', label: 'AdanIP Dadaptation' }, { value: 'Apollo', label: 'Apollo' }, {
             value: 'CAME',
             label: 'CAME'
-        }, {value: 'Lion', label: 'Lion'}, {value: '8bit Lion', label: '8bit Lion'}, {
+        }, { value: 'Lion', label: 'Lion' }, { value: '8bit Lion', label: '8bit Lion' }, {
             value: 'Paged 8bit Lion',
             label: 'Paged 8bit Lion'
-        }, {value: 'Lion Dadaptation', label: 'Lion Dadaptation'}, {
+        }, { value: 'Lion Dadaptation', label: 'Lion Dadaptation' }, {
             value: 'Prodigy',
             label: 'Prodigy'
-        }, {value: 'SGD Dadaptation', label: 'SGD Dadaptation'}, {value: 'Sophia', label: 'Sophia'}, {
+        }, { value: 'SGD Dadaptation', label: 'SGD Dadaptation' }, { value: 'Sophia', label: 'Sophia' }, {
             value: 'Tiger',
             label: 'Tiger'
         }];
 
     const precisionOption = [
-        {value: 'no', label: 'no'},
-        {value: 'fp16', label: 'fp16'},
-        {value: 'bf16', label: 'bf16'},]
+        { value: 'no', label: 'no' },
+        { value: 'fp16', label: 'fp16' },
+        { value: 'bf16', label: 'bf16' },]
     return <div>
-        <Collapse defaultActiveKey={['2']}>
-            <Panel header="Performance" key="1">
-                <Form
-                    name="basic"
-                    layout="vertical"
-                    disabled={!dreamModel}
-                >
+        <Form
+            name="basic"
+            layout="vertical"
+            disabled={!dreamModel}
+            form={form}
+            onFinish={onFinish}
+        >
+            <Collapse defaultActiveKey={['1']}>
+
+                <Panel header="Performance" key="1">
+
                     <Form.Item
                         label="Optimizer"
-                        name="Optimizer"
+                        name="optimizer"
                     >
                         <Select
                             style={{
                                 width: '100%',
                             }}
-                            defaultValue={undefined === formObj.optimizer || '' === formObj.optimizer || null == formObj.optimizer ? "8bit AdamW" : formObj.optimizer}
                             options={optimizerOption}
                             onChange={(e) => setFormObjDataHandler(e, 'optimizer')}
                         >
@@ -250,13 +235,12 @@ const App = () => {
 
                     <Form.Item
                         label="Mixed Precision"
-                        name="Mixed Precision"
+                        name="mixedPrecision"
                     >
                         <Select
                             style={{
                                 width: '100%',
                             }}
-                            defaultValue={undefined === formObj.mixedPrecision || '' === formObj.mixedPrecision || null == formObj.mixedPrecision ? "bf16" : formObj.mixedPrecision}
                             options={precisionOption}
                             onChange={(e) => setFormObjDataHandler(e, 'mixedPrecision')}
                         >
@@ -265,13 +249,12 @@ const App = () => {
 
                     <Form.Item
                         label="Memory Attention"
-                        name="Memory Attention"
+                        name="attention"
                     >
                         <Select
                             style={{
                                 width: '100%',
                             }}
-                            defaultValue={undefined === formObj.MemoryAttention || '' === formObj.MemoryAttention || null == formObj.MemoryAttention ? "xformers" : formObj.MemoryAttention}
                             onChange={(e) => setFormObjDataHandler(e, 'attention')}
                         >
                             <Option value="default">default</Option>
@@ -281,343 +264,289 @@ const App = () => {
 
                     <Form.Item
                         label=""
-                        name="Cache Latents"
+                        name="cacheLatents"
+                        valuePropName="checked"
                     >
-                        <Checkbox checked={formObj.cacheLatents} onChange={(e) => setFormObjDataHandler(e, 'cacheLatents')}>Cache
+                        <Checkbox onChange={(e) => setFormObjDataHandler(e.target.checked, 'cacheLatents')}>Cache
                             Latents</Checkbox>
                     </Form.Item>
 
                     <Form.Item
                         label=""
-                        name="Train UNET"
+                        name="trainUnet"
+                        valuePropName="checked"
                     >
-                        <Checkbox checked={formObj.trainUNET} onChange={(e) => setFormObjDataHandler(e.target.checked, 'trainUnet')}>Train
+                        <Checkbox onChange={(e) => setFormObjDataHandler(e.target.checked, 'trainUnet')}>Train
                             UNET</Checkbox>
                     </Form.Item>
 
                     <Form.Item
                         label="Step Ratio of Text Encoder Training"
-                        name="Step Ratio of Text Encoder Training"
+                        name="stopTextEncoder"
+
                     >
                         <Row gutter={10}>
                             <Col span={19}>
                                 <Slider
                                     min={0}
                                     max={1}
-                                    value={typeof formObj.stopTextEncoder === 'number' ? formObj.stopTextEncoder : 0}
                                     onChange={(e) => setFormObjDataHandler(e, 'stopTextEncoder')}
                                     step={0.1}
                                 />
                             </Col>
-                            <Col span={3}>
-                                <InputNumber min={0} max={1} value={formObj.stopTextEncoder} step={0.1}
-                                    onChange={(e) => setFormObjDataHandler(e, 'stopTextEncoder')}/>
-                            </Col>
+                            {/* <Col span={3}>
+                                <InputNumber min={0} max={1} step={0.1}
+                                    onChange={(e) => setFormObjDataHandler(e, 'stopTextEncoder')} />
+                            </Col> */}
                         </Row>
                     </Form.Item>
 
                     <Form.Item
                         label="Clip Skip"
-                        name="Clip Skip"
+                        name="clipSkip"
                     >
                         <Row gutter={10}>
                             <Col span={19}>
                                 <Slider
                                     min={0}
                                     max={12}
-                                    onChange={(e) => onChangeClipSkip(e)}
-                                    value={typeof formObj.clipSkip === 'number' ? formObj.clipSkip : 0}
+                                    onChange={(e) => setFormObjDataHandler(e, 'clipSkip')}
                                     step={1}
                                 />
                             </Col>
-                            <Col span={3}>
-                                <InputNumber min={0} max={12} value={formObj.clipSkip} step={1}
-                                             onChange={(e) => setFormObjDataHandler(e, 'clipSkip')}/>
-                            </Col>
+                            {/* <Col span={3}>
+                                <InputNumber min={0} max={12} step={1}
+                                    onChange={(e) => setFormObjDataHandler(e, 'clipSkip')} />
+                            </Col> */}
                         </Row>
                     </Form.Item>
 
                     <Form.Item
                         label=""
-                        name="Shuffle Tags"
+                        name="shuffleTags"
+                        valuePropName="checked"
                     >
-                        <Checkbox checked={formObj.shuffleTags} onChange={(e) => setFormObjDataHandler(e, 'shuffleTags')}>Shuffle
+                        <Checkbox onChange={(e) => setFormObjDataHandler(e, 'shuffleTags')}>Shuffle
                             Tags</Checkbox>
                     </Form.Item>
 
-                </Form>
-            </Panel>
-            <Panel header="Intervals" key="2">
-                <Form
+
+                </Panel>
+                <Panel header="Intervals" key="2">
+                    {/* <Form
                     disabled={!dreamModel}
                     name="basic"
-                    layout="vertical">
+                    layout="vertical"> */}
                     <Form.Item
                         label="Training Steps Per Image (Epochs)"
-                        name="Training Steps Per Image (Epochs)"
+                        name="numTrainEpochs"
                     >
-                        <Row gutter={10}>
-                            <Col span={19}>
-                                <Slider
-                                    min={0}
-                                    max={1000}
-                                    value={typeof formObj.numTrainEpochs === 'number' ? formObj.numTrainEpochs : 0}
-                                    onChange={(e) => setFormObjDataHandler(e, 'numTrainEpochs')}
-                                    step={1}
-                                />
-                            </Col>
-                            <Col span={3}>
-                                <InputNumber min={0} max={1} value={formObj.numTrainEpochs} step={1}
-                                             onChange={(e) => setFormObjDataHandler(e, 'numTrainEpochs')}/>
-                            </Col>
-                        </Row>
+                        {/* <Row gutter={10}> */}
+                            {/* <Col span={19}> */}
+                            <Slider
+                                min={0}
+                                max={1000}
+                                onChange={(e) => setFormObjDataHandler(e, 'numTrainEpochs')}
+                                step={1}
+                            />
+                            {/* </Col> */}
+                            {/* <Col span={3}>
+                                <InputNumber min={0} max={1}  step={1}
+                                    onChange={(e) => setFormObjDataHandler(e, 'numTrainEpochs')} />
+                            </Col> */}
+                        {/* </Row> */}
                     </Form.Item>
                     <Form.Item
                         label="Save Model Frequency (Epochs)"
-                        name="Save Model Frequency (Epochs)"
+                        name="saveEmbeddingEvery"
                     >
-                        <Row gutter={10}>
-                            <Col span={19}>
+                        {/* <Row gutter={10}>
+                            <Col span={19}> */}
                                 <Slider
                                     min={0}
                                     max={1000}
-                                    value={typeof formObj.saveEmbeddingEvery === 'number' ? formObj.saveEmbeddingEvery : 0}
                                     onChange={(e) => setFormObjDataHandler(e, 'saveEmbeddingEvery')}
                                     step={1}
                                 />
-                            </Col>
-                            <Col span={3}>
-                                <InputNumber min={0} max={1} value={formObj.saveEmbeddingEvery} step={1}
-                                             onChange={(e) => setFormObjDataHandler(e, 'saveEmbeddingEvery')}/>
-                            </Col>
-                        </Row>
+                            {/* </Col> */}
+                            {/* <Col span={3}>
+                                <InputNumber min={0} max={1}  step={1}
+                                    onChange={(e) => setFormObjDataHandler(e, 'saveEmbeddingEvery')} />
+                            </Col> */}
+                        {/* </Row> */}
                     </Form.Item>
                     <Form.Item
                         label="Save Preview(s) Frequency (Epochs)"
-                        name="Save Preview(s) Frequency (Epochs)"
+                        name="savePreviewEvery"
                     >
-                        <Row gutter={10}>
-                            <Col span={19}>
+                        {/* <Row gutter={10}>
+                            <Col span={19}> */}
                                 <Slider
                                     min={0}
                                     max={1000}
-                                    value={typeof formObj.savePreviewEvery === 'number' ? formObj.savePreviewEvery : 0}
                                     onChange={(e) => setFormObjDataHandler(e, 'savePreviewEvery')}
                                     step={1}
                                 />
-                            </Col>
-                            <Col span={3}>
-                                <InputNumber min={0} max={1000} value={formObj.savePreviewEvery} step={1}
-                                             onChange={(e) => setFormObjDataHandler(e, 'savePreviewEvery')}/>
-                            </Col>
-                        </Row>
+                            {/* </Col> */}
+                            {/* <Col span={3}>
+                                <InputNumber min={0} max={1000}  step={1}
+                                    onChange={(e) => setFormObjDataHandler(e, 'savePreviewEvery')} />
+                            </Col> */}
+                        {/* </Row> */}
                     </Form.Item>
-                </Form>
-            </Panel>
-            <Panel header="Learning Rate" key="3">
-                <Form
-                    name="basic"
-                    disabled={!dreamModel}
-                    layout="vertical">
+                    {/* </Form> */}
+                </Panel>
+                <Panel header="Learning Rate" key="3">
                     <Row>
                         <Col span={12}>
-                            <Form.Item label="Learning Rate" name="Learning Rate">
-                                <InputNumber value={formObj.learningRate}
-                                             onChange={(e) => setFormObjDataHandler(e, 'learningRate')}></InputNumber>
+                            <Form.Item label="Learning Rate" name="learningRate">
+                                <InputNumber 
+                                    onChange={(e) => setFormObjDataHandler(e, 'learningRate')}></InputNumber>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Text Encoder Learning Rate" name="Text Encoder Learning Rate">
-                                <InputNumber value={formObj.learningRateMin} onChange={(e) => setFormObjDataHandler(e, 'learningRateMin')}></InputNumber>
+                            <Form.Item label="Text Encoder Learning Rate" name="learningRate">
+                                <InputNumber  onChange={(e) => setFormObjDataHandler(e, 'learningRateMin')}></InputNumber>
                             </Form.Item>
                         </Col>
                     </Row>
-                </Form>
-            </Panel>
-            <Panel header="Lora" key="4">
-                <Form disabled={!dreamModel} layout="vertical">
+                </Panel>
+                <Panel header="Lora" key="4">
+                    {/* <Form disabled={!dreamModel} layout="vertical"> */}
                     <Form.Item
                         label=""
-                        name="Use LORA"
+                        name="useLora"
+                        valuePropName="checked"
                     >
-                        <Checkbox checked={formObj.useLora} onChange={(e) => setFormObjDataHandler(e.target.checked, 'useLora')}>Use LORA</Checkbox>
+                        <Checkbox onChange={(e) => setFormObjDataHandler(e.target.checked, 'useLora')}>Use LORA</Checkbox>
                     </Form.Item>
                     <Form.Item
-                        label="Lora UNET Rank"
-                        name="Lora UNET Rank"
+                        label={
+                            <div className={`${styles.flex} ${styles.flexbs}`} style={{width: '100%'}}>
+                                <span>Lora UNET Rank</span>
+                                {/* <span>{dreamModelInfo.loraUnetRank}</span> */}
+                                {/* <InputNumber min={2} max={128}  step={2} value={dreamModelInfo.loraUnetRank}
+                                    onChange={(e) => setFormObjDataHandler(e, 'loraUNETRank')} /> */}
+                            </div>
+                        }
+                        name="loraUnetRank"
                     >
-                        <Row gutter={10}>
-                            <Col span={19}>
+                        {/* <Row gutter={10}>
+                            <Col span={19}> */}
                                 <Slider
                                     min={2}
                                     max={128}
-                                    value={typeof formObj.loraUNETRank === 'number' ? formObj.loraUNETRank : 0}
-                                    onChange={(e) => setFormObjDataHandler(e, 'loraUNETRank')}
+                                    onChange={(e) => setFormObjDataHandler(e, 'loraUnetRank')}
                                     step={2}
                                 />
-                            </Col>
-                            <Col span={3}>
-                                <InputNumber min={2} max={128} value={formObj.loraUNETRank} step={2}
-                                onChange={(e) => setFormObjDataHandler(e, 'loraUNETRank')}/>
-                            </Col>
-                        </Row>
+                            {/* </Col> */}
+                            {/* <Col span={3}>
+                                <InputNumber min={2} max={128}  step={2}
+                                    onChange={(e) => setFormObjDataHandler(e, 'loraUNETRank')} />
+                            </Col> */}
+                        {/* </Row> */}
                     </Form.Item>
                     <Form.Item
                         label="Lora Text Encoder Rank"
-                        name="Lora Text Encoder Rank"
+                        name="loraTxtRank"
                     >
-                        <Row gutter={10}>
-                            <Col span={19}>
+                        {/* <Row gutter={10}>
+                            <Col span={19}> */}
                                 <Slider
                                     min={0}
                                     max={128}
-                                    value={typeof formObj.loraTxtRank === 'number' ? formObj.loraTxtRank : 0}
                                     onChange={(e) => setFormObjDataHandler(e, 'loraTxtRank')}
                                     step={2}
                                 />
-                            </Col>
-                            <Col span={3}>
-                                <InputNumber min={0} max={128} value={formObj.loraTxtRank} step={2}
-                                             onChange={(e) => setFormObjDataHandler(e, 'loraTxtRank')}/>
-                            </Col>
-                        </Row>
+                            {/* </Col> */}
+                            {/* <Col span={3}>
+                                <InputNumber min={0} max={128}  step={2}
+                                    onChange={(e) => setFormObjDataHandler(e, 'loraTxtRank')} />
+                            </Col> */}
+                        {/* </Row> */}
                     </Form.Item>
                     <Form.Item
                         label="Lora Weight (Alpha)"
-                        name="Lora Weight (Alpha)"
+                        name="loraWeight"
                     >
-                        <Row gutter={10}>
-                            <Col span={19}>
+                        {/* <Row gutter={10}>
+                            <Col span={19}> */}
                                 <Slider
                                     min={0.1}
                                     max={1}
-                                    value={typeof formObj.loraWeight === 'number' ? formObj.loraWeight : 0}
                                     onChange={(e) => setFormObjDataHandler(e, 'loraWeight')}
                                     step={0.1}
                                 />
-                            </Col>
-                            <Col span={3}>
-                                <InputNumber min={0.1} max={1} value={formObj.loraWeight} step={0.1}
-                                             onChange={(e) => setFormObjDataHandler(e, 'loraWeight')}/>
-                            </Col>
-                        </Row>
+                            {/* </Col> */}
+                            {/* <Col span={3}>
+                                <InputNumber min={0.1} max={1} step={0.1}
+                                    onChange={(e) => setFormObjDataHandler(e, 'loraWeight')} />
+                            </Col> */}
+                        {/* </Row> */}
                     </Form.Item>
-                </Form>
-            </Panel>
-            <Panel header="Image Processing" key="5">
-                <div>Max Resolution</div>
-                <Row gutter={10}>
-                    <Col span={19}>
-                        <Slider
-                            min={128}
-                            max={2048}
-                            value={typeof MaxResolution === 'number' ? MaxResolution : 0}
-                            onChange={(e) => setMaxResolution(e)}
-                            step={64}
-                            disabled={!dreamModel}
-                        />
-                    </Col>
-                    <Col span={3}>
-                        <InputNumber min={2} max={2048} value={MaxResolution} step={64} disabled={!dreamModel}
-                                     onChange={(e) => setMaxResolution(e)}/>
-                    </Col>
-                </Row>
-            </Panel>
-            <Panel header="Saving" key="6">
-                <div className={styles.prose}>General</div>
-                <Form
-                    name="basic"
-                    layout="vertical"
-                    disabled={!dreamModel}
-                >
+                    {/* </Form> */}
+                </Panel>
+                <Panel header="Image Processing" key="5">
+                    <Form.Item
+                        label="Max Resolution"
+                        name="resolution"
+                    >
+                        {/* <Row gutter={10}>
+                            <Col span={19}> */}
+                                <Slider
+                                    min={128}
+                                    max={2048}
+                                    onChange={(e) => setFormObjDataHandler(e, 'resolution')}
+                                    step={64}
+                                    disabled={!dreamModel}
+                                />
+                            {/* </Col> */}
+                            {/* <Col span={3}>
+                                <InputNumber min={2} max={2048} step={64} disabled={!dreamModel}
+                                    onChange={(e) => setFormObjDataHandler(e, 'resolution')} />
+                            </Col> */}
+                        {/* </Row> */}
+                    </Form.Item>
+                </Panel>
+                <Panel header="Saving" key="6">
+                    <div className={styles.prose}>General</div>
+
                     <Form.Item
                         label="Custom Model Name"
-                        name="Custom Model Name"
+                        name="customModelName"
                     >
-                        <Input type="textarea" value={formObj.customModelName} onChange={(e) => setFormObjDataHandler(e, 'customModelName')}
-                               placeholder="Enter a model name for saving checkpoints and lora models."/>
+                        <Input type="textarea" onChange={(e) => setFormObjDataHandler(e, 'customModelName')}
+                            placeholder="Enter a model name for saving checkpoints and lora models." />
                     </Form.Item>
 
                     <Form.Item
                         label=""
-                        name="save_ckpt_cancel"
+                        name="saveCkptCancel"
+                        valuePropName="checked"
                     >
-                        <Checkbox checked={formObj.saveCkptCancel} onChange={(e) => setFormObjDataHandler(e.target.checked, 'saveCkptCancel')}>
+                        <Checkbox onChange={(e) => setFormObjDataHandler(e.target.checked, 'saveCkptCancel')}>
                             Generate a .ckpt file when training is canceled.</Checkbox>
                     </Form.Item>
-
-
-                </Form>
-            </Panel>
-            <Panel header="Extra" key="7">
-                <div className={styles.prose}>Sanity Samples</div>
-                <Form
-                    name="basic"
-                    layout="vertical"
-                    disabled={!dreamModel}
-                >
+                </Panel>
+                <Panel header="Extra" key="7">
+                    <div className={styles.prose}>Sanity Samples</div>
                     <Form.Item
                         label="Sanity Sample Prompt"
-                        name="Sanity Sample Prompt"
+                        name="sanityPrompt"
                     >
-                        <Input type="textarea" value={SanitySamplePrompt} onChange={(e) => setSanitySamplePrompt(e)}
-                               placeholder="A generic prompt used to generate a sample image to verify model fidelity."/>
+                        <Input type="textarea" onChange={(e) => setFormObjDataHandler(e, 'sanityPrompt')}
+                            placeholder="A generic prompt used to generate a sample image to verify model fidelity." />
                     </Form.Item>
-                    {/*<Form.Item*/}
-                    {/*    label="Sanity Sample Negative Prompt"*/}
-                    {/*    name="Sanity Sample Negative Prompt"*/}
-                    {/*>*/}
-                    {/*    <Input type="textarea" value={SanitySampleNegativePrompt} onChange={(e)=>setSanitySampleNegativePrompt(e.target.value)}*/}
-                    {/*           placeholder="A negative prompt for the generic sample image."/>*/}
-                    {/*</Form.Item>*/}
 
                     <Form.Item
                         label="Sanity Sample Seed"
-                        name="Sanity Sample Seed"
+                        name="sanitySeed"
                     >
-                        <InputNumber value={SanitySampleSeed} step={1} onChange={(e) => setSanitySampleSeed(e)}/>
+                        <InputNumber step={1} onChange={(e) => setFormObjDataHandler(e, 'sanitySeed')} />
                     </Form.Item>
-
-                    {/*<Form.Item*/}
-                    {/*    label="Max Res"*/}
-                    {/*    name="Max Res"*/}
-                    {/*>*/}
-                    {/*    <Row gutter={10}>*/}
-                    {/*        <Col span={19}>*/}
-                    {/*            <Slider*/}
-                    {/*                min={0}*/}
-                    {/*                max={2048}*/}
-                    {/*                value={typeof maxResVal === 'number' ? maxResVal : 0}*/}
-                    {/*                step={64}*/}
-                    {/*            />*/}
-                    {/*        </Col>*/}
-                    {/*        <Col span={3}>*/}
-                    {/*            <InputNumber min={0} max={2048} value={maxResVal} step={64}/>*/}
-                    {/*        </Col>*/}
-                    {/*    </Row>*/}
-                    {/*</Form.Item>*/}
-
-                    {/*<Form.Item*/}
-                    {/*    label="Bucket Steps"*/}
-                    {/*    name="Bucket Steps"*/}
-                    {/*>*/}
-                    {/*    <Row gutter={10}>*/}
-                    {/*        <Col span={19}>*/}
-                    {/*            <Slider*/}
-                    {/*                min={0}*/}
-                    {/*                max={512}*/}
-                    {/*                value={typeof bucketStepsVal === 'number' ? bucketStepsVal : 0}*/}
-                    {/*                step={8}*/}
-                    {/*            />*/}
-                    {/*        </Col>*/}
-                    {/*        <Col span={3}>*/}
-                    {/*            <InputNumber min={0} max={512} value={bucketStepsVal} step={8}/>*/}
-                    {/*        </Col>*/}
-                    {/*    </Row>*/}
-                    {/*</Form.Item>*/}
-                </Form>
-            </Panel>
-        </Collapse>
+                </Panel>
+            </Collapse>
+        </Form>
     </div>
 }
 

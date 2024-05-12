@@ -16,9 +16,9 @@ const App = () => {
     const dreamModelInfo = useSelector(state => state.home.dreamModelInfo);
     const [attr, setattr] = useState(null);
     const dreamModel = useSelector(state => state.home.dreamModel);
-    const [active, setActive] = useState();
     const [imgBase64, setImgBase64] = useState('');
     const INTERVAL = 5000; // 每5秒请求一次
+    const [modelStatus, setmodelStatus] = useState();
     const items = [
         {
             key: 'Model',
@@ -42,39 +42,38 @@ const App = () => {
     }
 
     const LoadingSetting = () => {
-        if (dreamModel) {
             // let classPrompt = Concepts.classPrompt;
-            console.log(dreamModel);
-            Api.getDbModels(dreamModel).then(res => {
-                if (res.responseCode === '000') {
-                    console.log("res=", res.data)
-                    dispatch(getDreamModelInfo({dreamModelInfo: res.data}));
-                }
-            })
-        }
+        Api.getDbModels(dreamModel).then(res => {
+            if (res.responseCode === '000') {
+                console.log("res=", res.data)
+                dispatch(getDreamModelInfo({dreamModelInfo: res.data}));
+            }
+        })
     }
 
     const SaveSetting = () => {
-        if (dreamModel) {
-            // debugger;
-            Api.updateDbModelNames(dreamModelInfo).then(r => {
-                if (r.responseCode === '000') {
-                    console.log(r.data);
-                }
-            })
-        }
+        Api.updateDbModelNames(dreamModelInfo).then(r => {
+            if (r.responseCode === '000') {
+                console.log(r.data);
+            }
+        })
     }
 
     const Training = () => {
         // debugger;
-        console.log(dreamModel);
         if (dreamModel) {
             Api.trainJob(dreamModel).then(r => {
                 if (r.responseCode === '000') {
-                    setActive(true);
-                    console.log(r.data);
+                    const intervalId = setInterval(() => {
+                        if (modelStatus) {
+                            getJobStatus();
+                        } else {
+                            // status 为 false 的时候请求图片
+                            getJobImg();
+                            clearInterval(intervalId);
+                        }
+                    }, INTERVAL);
                 } else {
-                    setActive(false);
                     cancelJob();
                 }
             })
@@ -83,24 +82,22 @@ const App = () => {
 
     const cancelJob = () => {
         // debugger;
-        console.log(dreamModel);
-        if (dreamModel) {
+        // console.log(dreamModel);
+        // if (dreamModel) {
             Api.cancelJob().then(r => {
                 console.log(r.data);
             })
-        }
+        // }
     }
 
     const getJobStatus = () => {
         Api.getJobStatus().then(res => {
             // debugger;
             if (res.responseCode === '000') {
-                console.log("res=", res.data)
                 // debugger;
                 let temp = undefined === res.data || null === res.data.data ? false : res.data;
-                setActive(temp);
+                setmodelStatus(temp);
             } else {
-                setActive(false);
                 cancelJob();
             }
         })
@@ -117,22 +114,22 @@ const App = () => {
         }
     }
 
-    useEffect(()=>{
-        const intervalId = setInterval(() => {
-            if (active) {
-                getJobStatus();
-            } else {
-                if (active!==undefined) {
-                    getJobImg();
-                }
-                clearInterval(intervalId);
-            }
-        }, INTERVAL);
-        // 清理函数，虽然在这个场景下可能不需要显式清除定时器，因为我们在interval内部已经做了判断
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [active]);// 依赖数组包含isDone和isFetching，确保状态改变时能重新评估是否继续请求
+    // useEffect(()=>{
+    //     const intervalId = setInterval(() => {
+    //         if (active) {
+    //             getJobStatus();
+    //         } else {
+    //             if (active!==undefined) {
+    //                 getJobImg();
+    //             }
+    //             clearInterval(intervalId);
+    //         }
+    //     }, INTERVAL);
+    //     // 清理函数，虽然在这个场景下可能不需要显式清除定时器，因为我们在interval内部已经做了判断
+    //     return () => {
+    //         clearInterval(intervalId);
+    //     };
+    // });// 依赖数组包含isDone和isFetching，确保状态改变时能重新评估是否继续请求
 
 const GenerateCkpt = () => {
 
@@ -143,7 +140,7 @@ return <div>
         <Col span={6}><Button style={{width: '100%'}} onClick={LoadingSetting}>Load Settings</Button></Col>
         <Col span={6}><Button style={{width: '100%'}} onClick={SaveSetting}>Save Settings</Button></Col>
         <Col span={6}><Button style={{width: '100%'}} onClick={Training}>Train</Button></Col>
-        <Col span={6}><Button style={{width: '100%'}} onClick={cancelJob}>cancel</Button></Col>
+        <Col span={6}><Button style={{width: '100%'}} onClick={cancelJob}>Cancel</Button></Col>
     </Row>
     {attr?.name ?
         <Row>
@@ -173,18 +170,13 @@ return <div>
             </Collapse>
         </Col>
         <Col span={12}>
-            {/*<div className={styles['flex-sp']}>*/}
-            {/*  <div style={{fontSize: '24px'}}>Output</div>*/}
-            {/*  <Button>Refresh</Button>*/}
-            {/*</div>*/}
             <p>Selected model: {dreamModel}</p>
             <div>
                 {/*  这里需要一个任务执行中的状态表示，如果要放图片的话需要一个定时任务一直请求后端接口，直到任务结束拿到图片数据  */}
-                <Image
+                {imgBase64 ? <Image
                     width={"100%"}
-                    // src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
                     src={imgBase64}
-                />
+                /> :<></>}
             </div>
         </Col>
     </Row>
