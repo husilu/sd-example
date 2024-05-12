@@ -14,10 +14,18 @@ const App = () => {
   const [form3] = Form.useForm();
   const dreamModelInfo = useSelector(state => state.home.dreamModelInfo);
   const dreamModel = useSelector(state => state.home.dreamModel);
+  const [concepts, setConcepts] = useState({});
 
   const setFormObjDataHandler = (val, key) => {
-    dispatch(editDreamModelInfo({dreamModelInfo: {...dreamModelInfo, conceptsList: [val]}}))
+    debugger
+    setConcepts(prevState => ({
+      ...prevState,
+      [key]: val
+    }));
 }
+  useEffect(() => {
+    dispatch(editDreamModelInfo({dreamModelInfo: {...dreamModelInfo, conceptsList: [concepts]}}))
+  }, [concepts]);
 
 useEffect(() => {
     form1.setFieldsValue({...dreamModelInfo});
