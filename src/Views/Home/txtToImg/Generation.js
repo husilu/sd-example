@@ -9,6 +9,8 @@ import styles from './style.module.scss';
 import { Button } from 'antd';
 
 import Api from '../../../api/img'
+import store from "../../../store";
+import {CloudDownloadOutlined} from "@ant-design/icons";
 
 const App = (props) => {
 
@@ -127,14 +129,23 @@ const App = (props) => {
                 </Form>
             </Col>
             <Col span={9}>
-                <Button type="primary" onClick={() => downLoadHandler(imgDownloadHref)} style={{ marginBottom: "10px"}} loading={donwLoading} disabled={donwLoading}>下载</Button>
+                <a href={`http://124.71.223.180:8088/img/download/${type}?fileName=${imgDownloadHref}&token=${store.getState().auth.token}`}>
+                    <Button type="primary"  style={{marginBottom: "10px"}}
+                    loading={donwLoading} disabled={donwLoading}>下载</Button>
+                </a>
                 <Spin tip="Loading" spinning={valueLoading}>
                     {imgSrc ? <Image
                         width={'100%'}
                         src={imgSrc}
                     /> : <div className={styles.imgbox}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        </div>}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                             strokeLinejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </div>}
                 </Spin>
             </Col>
         </Row>

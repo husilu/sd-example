@@ -2,6 +2,7 @@ import { Col, Row, Card, Select, message, Spin } from 'antd';
 import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import Api from '../../api/img.js';
 import { useEffect, useState } from 'react';
+import store from "../../store";
 const baseURL =  'http://124.71.223.180:8088'
 
 
@@ -11,7 +12,6 @@ export default function App() {
     const [list, setlist] = useState([]);
     const [loading, setloading] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-
     useEffect(() => {
         setloading(true)
         Api.imglist(value).then(res => {
@@ -93,7 +93,7 @@ export default function App() {
                                 marginBottom: '15px'
                             }}
                             actions={[
-                                <a href={`${baseURL}/img/download/${value}?fileName=${item.fileName}`}>
+                                <a href={`${baseURL}/img/download/${value}?fileName=${item.fileName}&token=${store.getState().auth.token}`}>
                                     <CloudDownloadOutlined key="CloudDownloadOutlined" title="下载"/>
                                 </a>,
                                 <DeleteOutlined key="DeleteOutlined" onClick={() => deleteHandler(item.fileName)} title="删除"/>
