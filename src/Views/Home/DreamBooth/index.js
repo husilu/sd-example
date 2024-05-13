@@ -64,15 +64,7 @@ const App = () => {
         if (dreamModel) {
             Api.trainJob(dreamModel).then(r => {
                 if (r.responseCode === '000') {
-                    const intervalId = setInterval(() => {
-                        if (modelStatus) {
-                            getJobStatus();
-                        } else {
-                            // status 为 false 的时候请求图片
-                            getJobImg();
-                            clearInterval(intervalId);
-                        }
-                    }, INTERVAL);
+                   setmodelStatus(true);
                 } else {
                     cancelJob();
                 }
@@ -94,7 +86,7 @@ const App = () => {
         Api.getJobStatus().then(res => {
             // debugger;
             if (res.responseCode === '000') {
-                // debugger;
+                debugger;
                 let temp = undefined === res.data || null === res.data.data ? false : res.data;
                 setmodelStatus(temp);
             } else {
@@ -114,22 +106,26 @@ const App = () => {
         }
     }
 
-    // useEffect(()=>{
-    //     const intervalId = setInterval(() => {
-    //         if (active) {
-    //             getJobStatus();
-    //         } else {
-    //             if (active!==undefined) {
-    //                 getJobImg();
-    //             }
-    //             clearInterval(intervalId);
-    //         }
-    //     }, INTERVAL);
-    //     // 清理函数，虽然在这个场景下可能不需要显式清除定时器，因为我们在interval内部已经做了判断
-    //     return () => {
-    //         clearInterval(intervalId);
-    //     };
-    // });// 依赖数组包含isDone和isFetching，确保状态改变时能重新评估是否继续请求
+    const inter=()=>{
+        const intervalId = setInterval(() => {
+            debugger;
+            if (modelStatus===true) {
+                getJobStatus();
+            }
+            if (modelStatus===false){
+                getJobImg();
+                clearInterval(intervalId);
+            }
+        }, INTERVAL);
+        // 清理函数，虽然在这个场景下可能不需要显式清除定时器，因为我们在interval内部已经做了判断
+        return () => {
+            clearInterval(intervalId);
+        };
+    }
+
+    useEffect(()=>{
+        inter();
+    },[modelStatus]);// 依赖数组包含isDone和isFetching，确保状态改变时能重新评估是否继续请求
 
 const GenerateCkpt = () => {
 
